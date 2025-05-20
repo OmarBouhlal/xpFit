@@ -10,8 +10,8 @@ class XPFitButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.horizontalPadding = 30,
-    this.verticalPadding = 13,
+    this.horizontalPadding = 33,
+    this.verticalPadding = 12,
   });
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xp_fit/UI/pages/auth/login.page.dart';
 
 import 'package:xp_fit/UI/pages/auth/register.page.dart';
 import 'package:xp_fit/UI/pages/home.page.dart';
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        "/": (context) => RegisterPage(),
+        "/": (context) => LoginPage(),
         //"/nutrition" : (context) => NutritionPage(),
         },
       theme: ThemeData(primarySwatch: Colors.deepOrange),

@@ -21,94 +21,103 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D1B2A),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  'XP-FIT',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.cyanAccent,
-                    letterSpacing: 2,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10,
-                        color: Colors.cyanAccent,
-                        offset: Offset(0, 0),
-                      ),
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [const Color.fromARGB(255, 0, 0, 0), const Color.fromARGB(255, 53, 174, 255)],
+            begin: Alignment.topCenter,
+            end: Alignment(0.0, 5.0),
+          ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    'XP-FIT',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.cyanAccent,
+                      letterSpacing: 2,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10,
+                          color: Colors.cyanAccent,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  NeonTextField(
+                    controller: _usernameController,
+                    label: 'Username',
+                  ),
+      
+                  const SizedBox(height: 16),
+      
+                  NeonTextField(
+                    controller: _emailController,
+                    label: 'Email',
+                    keyboard: TextInputType.emailAddress,
+                  ),
+      
+                  const SizedBox(height: 16),
+                  
+                  NeonPasswordField(
+                    controller: _passwordController,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  NeonTextField(
+                    controller: _weightController,
+                    label: 'Weight (kg)',
+                    keyboard: TextInputType.number,
+                    digitsOnly: true,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  NeonTextField(
+                    controller: _weightController,
+                    label: 'Weight (kg)',
+                    keyboard: TextInputType.number,
+                    digitsOnly: true,
+                  ),                
+                  
+                  const SizedBox(height: 16),
+                  
+                  _birthDatePicker(),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _genderOption("male", "Male"),
+                      const SizedBox(width: 20),
+                      _genderOption("female", "Female"),
                     ],
                   ),
-                ),
-                const SizedBox(height: 30),
-                NeonTextField(
-                  controller: _usernameController,
-                  label: 'Username',
-                ),
-
-                const SizedBox(height: 16),
-
-                NeonTextField(
-                  controller: _emailController,
-                  label: 'Email',
-                  keyboard: TextInputType.emailAddress,
-                ),
-
-                const SizedBox(height: 16),
-                
-                NeonPasswordField(
-                  controller: _passwordController,
-                ),
-                
-                const SizedBox(height: 16),
-                
-                NeonTextField(
-                  controller: _weightController,
-                  label: 'Weight (kg)',
-                  keyboard: TextInputType.number,
-                  digitsOnly: true,
-                ),
-                
-                const SizedBox(height: 16),
-                
-                NeonTextField(
-                  controller: _weightController,
-                  label: 'Weight (kg)',
-                  keyboard: TextInputType.number,
-                  digitsOnly: true,
-                ),                
-                
-                const SizedBox(height: 16),
-                
-                _birthDatePicker(),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _genderOption("male", "Male"),
-                    const SizedBox(width: 20),
-                    _genderOption("female", "Female"),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 25),
-                  child: XPFitButton(
-                    text: 'Register',
-                    onPressed: () {
-                      // Handle registration logic here
-                      //print("Register button pressed!");
-                    },
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: XPFitButton(
+                      text: 'Register',
+                      onPressed: () {
+                        // Handle registration logic here
+                        //print("Register button pressed!");
+                      },
+                    ),
                   ),
-                ),
-
-              ],
+      
+                ],
+              ),
             ),
           ),
         ),
