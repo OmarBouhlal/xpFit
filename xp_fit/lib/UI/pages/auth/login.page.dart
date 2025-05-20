@@ -43,8 +43,28 @@ class _LoginPageState extends State<LoginPage> {
                     NeonPasswordField(
                     controller: _passwordController,
                   ),
-                    SizedBox(height:30),    //Adds vertical space (20 pixels) between widgets. Used her
-      
+                  SizedBox(height: 10),
+
+                  ElevatedButton(     // create new account button
+                    onPressed: ()=>{
+                      Navigator.pushNamed(context, '/registration'),
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                    ),
+                    child: Text(
+                      "create new account",
+                      style: const TextStyle(
+                        color:Color.fromRGBO(202, 240, 246, 1),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),  
+
+                  SizedBox(height:8),    //Adds vertical space (20 pixels) between widgets. Used her
+                
                     // Login button
                     XPFitButton(
                       text: 'Login',

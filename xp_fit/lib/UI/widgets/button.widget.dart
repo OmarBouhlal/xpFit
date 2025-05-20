@@ -27,8 +27,8 @@ class XPFitButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),
-        shadowColor: Colors.cyanAccent,
-        elevation: 10,
+        shadowColor: const Color.fromARGB(255, 151, 255, 255),
+        elevation: 5,
       ),
       child: Text(
         text,

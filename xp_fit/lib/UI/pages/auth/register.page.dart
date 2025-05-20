@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
@@ -111,7 +111,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       text: 'Register',
                       onPressed: () {
                         // Handle registration logic here
-                        //print("Register button pressed!");
+                        Navigator.pushNamed(context, '/');
+
                       },
                     ),
                   ),
