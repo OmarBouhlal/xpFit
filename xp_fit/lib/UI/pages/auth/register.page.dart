@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:xp_fit/UI/widgets/button.widget.dart';
+import 'package:xp_fit/UI/widgets/textfield.widget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,7 +14,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
 
   String? _selectedGender;
   bool notVisible = true;
@@ -30,10 +29,6 @@ class _RegisterPageState extends State<RegisterPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Image.asset(
-                  'assets/logo.png',
-                  height: 120,
-                ),
                 const SizedBox(height: 10),
                 Text(
                   'XP-FIT',
@@ -52,16 +47,45 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                _neonTextField(_usernameController, 'Username'),
+                NeonTextField(
+                  controller: _usernameController,
+                  label: 'Username',
+                ),
+
                 const SizedBox(height: 16),
-                _neonTextField(_emailController, 'Email', keyboard: TextInputType.emailAddress),
+
+                NeonTextField(
+                  controller: _emailController,
+                  label: 'Email',
+                  keyboard: TextInputType.emailAddress,
+                ),
+
                 const SizedBox(height: 16),
-                _neonPasswordField(),
+                
+                NeonPasswordField(
+                  controller: _passwordController,
+                ),
+                
                 const SizedBox(height: 16),
-                _neonTextField(_weightController, 'Weight (kg)', digitsOnly: true),
+                
+                NeonTextField(
+                  controller: _weightController,
+                  label: 'Weight (kg)',
+                  keyboard: TextInputType.number,
+                  digitsOnly: true,
+                ),
+                
                 const SizedBox(height: 16),
-                _neonTextField(_heightController, 'Height (cm)', digitsOnly: true),
+                
+                NeonTextField(
+                  controller: _weightController,
+                  label: 'Weight (kg)',
+                  keyboard: TextInputType.number,
+                  digitsOnly: true,
+                ),                
+                
                 const SizedBox(height: 16),
+                
                 _birthDatePicker(),
                 const SizedBox(height: 16),
                 Row(
@@ -88,63 +112,6 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _neonTextField(TextEditingController controller, String label,
-      {TextInputType keyboard = TextInputType.text, bool digitsOnly = false}) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboard,
-      inputFormatters: digitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.cyanAccent),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.cyanAccent),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.cyan, width: 2),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: Colors.white10,
-      ),
-    );
-  }
-
-  Widget _neonPasswordField() {
-    return TextField(
-      controller: _passwordController,
-      obscureText: notVisible,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: 'Password',
-        labelStyle: const TextStyle(color: Colors.cyanAccent),
-        suffixIcon: IconButton(
-          icon: Icon(
-            notVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.cyanAccent,
-          ),
-          onPressed: () {
-            setState(() {
-              notVisible = !notVisible;
-            });
-          },
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.cyanAccent),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.cyan, width: 2),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: Colors.white10,
       ),
     );
   }

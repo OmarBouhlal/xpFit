@@ -10,8 +10,8 @@ class XPFitButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.horizontalPadding = 40,
-    this.verticalPadding = 15,
+    this.horizontalPadding = 30,
+    this.verticalPadding = 13,
   });
 
   @override
@@ -19,7 +19,7 @@ class XPFitButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.cyanAccent,
+        backgroundColor: Color.fromRGBO(202, 240, 246, 1),
         padding: EdgeInsets.symmetric(
           horizontal: horizontalPadding,
           vertical: verticalPadding,
@@ -35,6 +35,7 @@ class XPFitButton extends StatelessWidget {
         style: const TextStyle(
           color: Color(0xFF0D1B2A),
           fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
       ),
     );
