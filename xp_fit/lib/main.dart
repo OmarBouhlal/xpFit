@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:xp_fit/UI/pages/auth/register.page.dart';
+import 'package:xp_fit/UI/pages/home.page.dart';
 
 void main() => runApp(MyApp());
 
