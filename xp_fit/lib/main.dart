@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:xp_fit/UI/pages/auth/register.page.dart';
+import 'package:xp_fit/UI/pages/home.page.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {"/": (context) => RegisterPage()},
+      routes: {"/": (context) => HomePage()},
       theme: ThemeData(primarySwatch: Colors.deepOrange),
       initialRoute: "/",
     );
