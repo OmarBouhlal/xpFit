@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        "/": (context) => RegisterPage(),
+        "/": (context) => HomePage(),
         //"/nutrition" : (context) => NutritionPage(),
         },
       theme: ThemeData(primarySwatch: Colors.deepOrange),
