@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xp_fit/UI/widgets/button.widget.dart';
 import 'package:xp_fit/UI/widgets/textfield.widget.dart';
+import 'package:xp_fit/DB/db_helper.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
 
   String? _selectedGender;
   bool notVisible = true;
@@ -86,8 +88,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 16),
                   
                   NeonTextField(
-                    controller: _weightController,
-                    label: 'Weight (kg)',
+                    controller: _heightController,
+                    label: 'Height (kg)',
                     keyboard: TextInputType.number,
                     digitsOnly: true,
                   ),                
@@ -109,11 +111,45 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.only(bottom: 25),
                     child: XPFitButton(
                       text: 'Register',
-                      onPressed: () {
+                      onPressed: () async {
                         // Handle registration logic here
-                        Navigator.pushNamed(context, '/');
+                        final username = _usernameController.text.trim();
+                        final email = _emailController.text.trim();
+                        final password = _passwordController.text;
+                        final weight = double.tryParse(_weightController.text);
+                        final height = double.tryParse(_heightController.text);
+                        final gender = _selectedGender;
+                        final birthDate = _selectedBirthDate?.toIso8601String();
 
+                        if (username.isEmpty ||
+                            email.isEmpty ||
+                            password.isEmpty ||
+                            weight == null ||
+                            height == null ||
+                            gender == null ||
+                            birthDate == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please fill all fields correctly.")),
+                          );
+                          return;
+                        }
+
+                        await DBHelper.registration(
+                          username,
+                          email,
+                          password,
+                          weight,
+                          height,
+                          birthDate,
+                          gender,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Registration successful!")),
+                        );
+                        Navigator.pushReplacementNamed(context, '/');
                       },
+                      
                     ),
                   ),
       
