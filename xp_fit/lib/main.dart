@@ -10,7 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {"/": (context) => RegisterPage()},
+      routes: {
+        "/": (context) => RegisterPage(),
+        //"/nutrition" : (context) => NutritionPage(),
+        },
       theme: ThemeData(primarySwatch: Colors.deepOrange),
       initialRoute: "/",
     );
