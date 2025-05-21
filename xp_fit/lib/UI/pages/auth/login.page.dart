@@ -69,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                     XPFitButton(
                       text: 'Login',
                       onPressed: ()=>{
+                        Navigator.pushReplacementNamed(context, 'registration'),
                       }
                     )
                   ],
