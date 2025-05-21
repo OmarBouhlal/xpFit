@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xp_fit/UI/pages/auth/login.page.dart';
 
 import 'package:xp_fit/UI/pages/auth/register.page.dart';
+import 'package:xp_fit/UI/pages/home.page.dart';
 import 'package:xp_fit/UI/pages/nutrition.page.dart';
 
 void main() => runApp(MyApp());
@@ -16,8 +17,16 @@ class MyApp extends StatelessWidget {
         "/": (context) => LoginPage(),
         "/nutrition": (context) => NutritionPage(),
         "/registration": (context) => RegisterPage(),
+        "/home": (context) => HomePage(),
       },
-      theme: ThemeData(primarySwatch: Colors.deepOrange),
+      theme: ThemeData(
+        // Set default brightness to dark for better contrast on dark backgrounds
+        brightness: Brightness.dark,
+        // Make app bar theme transparent
+        appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
+        // Make scaffoldBackgroundColor transparent to allow Container gradient to show
+        scaffoldBackgroundColor: Colors.transparent,
+      ),
       initialRoute: "/",
     );
   }

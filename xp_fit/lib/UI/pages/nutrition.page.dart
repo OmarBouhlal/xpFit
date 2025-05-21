@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../API/nutrition.api.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_html/flutter_html.dart';
 
 class NutritionPage extends StatefulWidget {
   const NutritionPage({super.key});
@@ -12,8 +11,6 @@ class NutritionPage extends StatefulWidget {
 
 class _NutritionPageState extends State<NutritionPage> {
   final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
-  String? _nutritionHtml;
-  bool _showNutrition = false;
 
   void _launchURL(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
