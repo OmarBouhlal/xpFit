@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:xp_fit/UI/widgets/button.widget.dart';
+import 'package:xp_fit/UI/widgets/textfield.widget.dart';
 
 class LoginPage extends StatefulWidget {
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -15,57 +15,72 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body : Padding(
-          padding: const EdgeInsets.all(50.0),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color.fromARGB(255, 0, 0, 0),
+            const Color.fromARGB(255, 53, 174, 255),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment(0.0, 5.0),
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 50),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                        label: Text("email"),
-                        border: OutlineInputBorder()
-                    ),
-                  ),
-                  SizedBox(height:20),    //Adds vertical space (20 pixels) between widgets. Used here to separate the email and password fields.
-                  TextField(
-                      controller: _passwordController,
-                      obscureText: notVisible,   //This is used to hide the password from the user.
-                      decoration: InputDecoration(
-                          hintText: "EMAIL",
-                          label: Text('password'),
-                          border: OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              notVisible==true?Icons.visibility:Icons.visibility_off,
-                            ),
-                            onPressed: () =>{
-                              setState(() {
-                                notVisible = !notVisible;
-                              })
-                            },
-                          )
-                      )
-                  ),
-                  SizedBox(height:20),    //Adds vertical space (20 pixels) between widgets. Used her
+                  Image.asset('assets/logo.png', height: 250),
 
-                  // Login button
+                  NeonTextField(controller: _emailController, label: 'email'),
+                  SizedBox(
+                    height: 20,
+                  ), //Adds vertical space (20 pixels) between widgets. Used here to separate the email and password fields.
+                  NeonPasswordField(controller: _passwordController),
+                  SizedBox(height: 10),
+
                   ElevatedButton(
-                    onPressed: ()=>{},
-                    child: Text("Login"),
+                    // create new account button
+                    onPressed:
+                        () => {Navigator.pushNamed(context, '/registration')},
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      "create new account",
+                      style: const TextStyle(
+                        color: Color.fromRGBO(202, 240, 246, 1),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
 
-
+                  SizedBox(
+                    height: 8,
+                  ), //Adds vertical space (20 pixels) between widgets. Used her
+                  // Login button
+                  XPFitButton(
+                    text: 'Login',
+                    onPressed:
+                        () => {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            'registration',
+                          ),
+                        },
+                  ),
                 ],
               ),
             ),
           ),
-        )
+        ),
+      ),
     );
   }
 }
