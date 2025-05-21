@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:xp_fit/UI/pages/auth/register.page.dart';
+import 'package:xp_fit/UI/pages/nutrition.page.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,9 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {"/": (context) => RegisterPage()},
+      routes: {
+        "/": (context) => RegisterPage(),
+        "/nutrition": (context) => NutritionPage(),
+      },
       theme: ThemeData(primarySwatch: Colors.deepOrange),
-      initialRoute: "/",
+      initialRoute: "/nutrition",
     );
   }
 }
