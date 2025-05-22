@@ -20,14 +20,11 @@ class MyApp extends StatelessWidget {
         "/home": (context) => HomePage(),
       },
       theme: ThemeData(
-        // Set default brightness to dark for better contrast on dark backgrounds
         brightness: Brightness.dark,
-        // Make app bar theme transparent
         appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
-        // Make scaffoldBackgroundColor transparent to allow Container gradient to show
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      initialRoute: "/",
+      initialRoute: "/nutrition",
     );
   }
 }

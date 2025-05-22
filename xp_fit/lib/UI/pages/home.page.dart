@@ -44,9 +44,8 @@ class _HomePageState extends State<HomePage> {
               horizontal: 16.0,
               vertical: 8.0,
             ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                
-              ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
             ),
           ),
           centerTitle: true, // This centers the title in the AppBar
@@ -167,7 +166,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
