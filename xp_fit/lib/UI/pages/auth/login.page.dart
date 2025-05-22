@@ -63,11 +63,14 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(
                     height: 8,
-                  ), //Adds vertical space (20 pixels) between widgets. Used her
+                  ),
+                  //Adds vertical space (20 pixels) between widgets. Used her
                   // Login button
                   XPFitButton(
                     text: 'Login',
-                    onPressed: () => {Navigator.pushNamed(context, '/home')},
+                    onPressed: () => {
+                      Navigator.pushNamed(context, '/home')
+                      },
                   ),
                 ],
               ),

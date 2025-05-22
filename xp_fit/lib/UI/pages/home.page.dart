@@ -47,13 +47,6 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.signal_cellular_alt, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Icon(Icons.wifi, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Icon(Icons.battery_full, color: Colors.white, size: 20),
-              ],
             ),
           ),
           centerTitle: true, // This centers the title in the AppBar
@@ -164,11 +157,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/nutrition');
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
