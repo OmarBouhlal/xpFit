@@ -86,6 +86,7 @@ class _NutritionPageState extends State<NutritionPage> {
                         weekData.entries.map((entry) {
                           final day = entry.key;
                           final meals = entry.value['meals'] as List<dynamic>;
+                          final nutrients = entry.value['nutrients'] as dynamic;
                           return Card(
                             color: Colors.black.withOpacity(0.3),
                             margin: const EdgeInsets.all(8),
@@ -94,16 +95,62 @@ class _NutritionPageState extends State<NutritionPage> {
                                 day.toUpperCase(),
                                 style: TextStyle(
                                   color: themeColor,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.blue.shade900.withOpacity(
+                                        0.8,
+                                      ), // Deep shadow
+                                      blurRadius: 15.0,
+                                    ),
+                                    Shadow(
+                                      color: Colors.blueAccent.withOpacity(
+                                        0.3,
+                                      ), // Subtle glow
+                                      blurRadius: 30.0,
+                                    ),
+                                  ],
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  fontFamily: 'RaleWay',
                                 ),
                               ),
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'calories : ${nutrients['calories'].floor()}',
+                                  ),
+                                  SizedBox(width: 5),
+                                  Image.asset(
+                                    'assets/protein.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    'proteins: ${nutrients['protein'].floor()}',
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Image.asset(
+                                    'assets/butter.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    'fat : ${nutrients['fat'].floor()}',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+
                               children:
                                   meals.map((meal) {
                                     return ListTile(
-                                      onTap:
-                                          () => _launchURL(
-                                            'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
-                                          ),
+                                      // onTap:
+                                      //     () => _launchURL(
+                                      //       'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
+                                      //     ),
                                       title: Text(
                                         meal['title'],
                                         style: const TextStyle(
@@ -117,17 +164,29 @@ class _NutritionPageState extends State<NutritionPage> {
                                         ),
                                       ),
                                       leading: GestureDetector(
-                                        onDoubleTap: () {
+                                        onTap: () {
                                           _showImagePopup(context, meal['id']);
                                         },
                                         child: Image.network(
                                           'https://spoonacular.com/recipeImages/${meal['image']}',
-                                          width: 50,
+                                          width: 60,
+                                          height: 60,
+                                          filterQuality: FilterQuality.medium,
                                           errorBuilder:
                                               (_, __, ___) => Icon(
                                                 Icons.image_not_supported,
                                                 color: themeColor,
                                               ),
+                                        ),
+                                      ),
+                                      trailing: IconButton(
+                                        onPressed:
+                                            () => _launchURL(
+                                              'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
+                                            ),
+                                        icon: Icon(
+                                          Icons.arrow_outward,
+                                          color: Colors.blue.shade300,
                                         ),
                                       ),
                                     );
@@ -140,6 +199,37 @@ class _NutritionPageState extends State<NutritionPage> {
               },
             ),
           ],
+        ),
+        bottomNavigationBar: Theme(
+          // Override the bottom nav theme to ensure transparency
+          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          child: BottomAppBar(
+            color: Colors.transparent,
+            elevation: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.home, color: themeColor),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.restaurant, color: themeColor),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.fitness_center_sharp, color: themeColor),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.sports_gymnastics, color: themeColor),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

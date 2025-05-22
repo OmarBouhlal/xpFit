@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class NutritionAPI {
   static const String _baseUrl = 'https://api.spoonacular.com';
-  static const String _apiKey = 'f6e4b2a00636451fbe53df4058a9ccef';
+  static const String _apiKey = 'c8b24334f7274ced82a6ffa308d0f197';
 
   static Future<Map<String, dynamic>> getWeeklyMealPlan() async {
     try {
@@ -25,7 +25,7 @@ class NutritionAPI {
     }
   }
 
-static String getNutritionLabelUrl(int recipeId) {
+  static String getNutritionLabelUrl(int recipeId) {
     return 'https://api.spoonacular.com/recipes/$recipeId/nutritionLabel.png?apiKey=$_apiKey';
   }
 }

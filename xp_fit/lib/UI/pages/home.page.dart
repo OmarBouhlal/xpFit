@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -85,7 +84,11 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(width: 15), // Space between Level and XP
                           Text(
                             '${currentXP.toInt()}/${maxXP.toInt()} XP',
-                            style: TextStyle(color: themeColor, fontSize: 13 , fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: themeColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
