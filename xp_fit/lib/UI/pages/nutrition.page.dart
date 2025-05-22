@@ -11,6 +11,8 @@ class NutritionPage extends StatefulWidget {
 
 class _NutritionPageState extends State<NutritionPage> {
   final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+  late Future<Map<String, dynamic>> _mealPlanFuture;
+  final Set<int> _favoriteMealIds = {};
 
   void _launchURL(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
@@ -42,7 +44,22 @@ class _NutritionPageState extends State<NutritionPage> {
     }
   }
 
+  void _toggleFavorite(int mealId) {
+    setState(() {
+      if (_favoriteMealIds.contains(mealId)) {
+        _favoriteMealIds.remove(mealId);
+      } else {
+        _favoriteMealIds.add(mealId);
+      }
+    });
+  }
+
   @override
+  void initState() {
+    super.initState();
+    _mealPlanFuture = NutritionAPI.getWeeklyMealPlan(); 
+  }
+
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
@@ -66,7 +83,7 @@ class _NutritionPageState extends State<NutritionPage> {
         body: Stack(
           children: [
             FutureBuilder<Map<String, dynamic>>(
-              future: NutritionAPI.getWeeklyMealPlan(),
+              future: _mealPlanFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -146,6 +163,7 @@ class _NutritionPageState extends State<NutritionPage> {
 
                               children:
                                   meals.map((meal) {
+                                    bool isFavorite = false;
                                     return ListTile(
                                       // onTap:
                                       //     () => _launchURL(
@@ -179,15 +197,42 @@ class _NutritionPageState extends State<NutritionPage> {
                                               ),
                                         ),
                                       ),
-                                      trailing: IconButton(
-                                        onPressed:
-                                            () => _launchURL(
-                                              'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
+                                      trailing: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Flexible(
+                                            child: IconButton(
+                                              onPressed:
+                                                  () => _launchURL(
+                                                    'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
+                                                  ),
+                                              icon: Icon(
+                                                Icons.arrow_outward,
+                                                color: Colors.blue.shade300,
+                                              ),
                                             ),
-                                        icon: Icon(
-                                          Icons.arrow_outward,
-                                          color: Colors.blue.shade300,
-                                        ),
+                                          ),
+                                          Flexible(
+                                            child: IconButton(
+                                              onPressed:
+                                                  () => _toggleFavorite(
+                                                    meal['id'],
+                                                  ),
+                                              icon: Icon(
+                                                Icons.favorite,
+                                                color:
+                                                    _favoriteMealIds.contains(
+                                                          meal['id'],
+                                                        )
+                                                        ? Colors
+                                                            .blue
+                                                            .shade300 // Blue when favorited
+                                                        : null, // Default color when not favorited
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   }).toList(),
