@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -45,14 +44,8 @@ class _HomePageState extends State<HomePage> {
               horizontal: 16.0,
               vertical: 8.0,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.signal_cellular_alt, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Icon(Icons.wifi, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Icon(Icons.battery_full, color: Colors.white, size: 20),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                
               ],
             ),
           ),
@@ -92,7 +85,11 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(width: 15), // Space between Level and XP
                           Text(
                             '${currentXP.toInt()}/${maxXP.toInt()} XP',
-                            style: TextStyle(color: themeColor, fontSize: 13 , fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: themeColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -164,7 +161,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/nutrition');
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
