@@ -44,15 +44,10 @@ class _HomePageState extends State<HomePage> {
               horizontal: 16.0,
               vertical: 8.0,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-            ),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end),
           ),
           centerTitle: true, // This centers the title in the AppBar
-          title: Padding(
-            padding: const EdgeInsets.only(top: 8), // Add vertical padding
-            child: Image.network('assets/sdsdff.png', height: 60, width: 60),
-          ),
+
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -166,9 +161,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
