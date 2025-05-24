@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../API/nutrition.api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,6 +15,7 @@ class _NutritionPageState extends State<NutritionPage> {
   late Future<Map<String, dynamic>> _mealPlanFuture;
   late Future<Duration?> _cacheAgeFuture;
   final Set<int> _favoriteMealIds = {};
+  final Map<String, bool> _isExpandedMap = {};
 
   void _launchURL(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
@@ -21,17 +23,17 @@ class _NutritionPageState extends State<NutritionPage> {
     }
   }
 
-  void _showImagePopup(BuildContext context, int idRecipe) async {
-    final imageUrl = NutritionAPI.getNutritionLabelUrl(idRecipe);
+  void _showNutritionLabelImage(BuildContext context, int idRecipe) async {
+    final nutritionLabelURL = NutritionAPI.getNutritionLabelUrl(idRecipe);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Image.network(imageUrl),
+          content: Image.network(nutritionLabelURL),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Close"),
+              child: Text("Close", style: TextStyle(color: themeColor)),
             ),
           ],
         );
@@ -78,9 +80,18 @@ class _NutritionPageState extends State<NutritionPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text("Weekly Meal Plan"),
+          title: Text(
+            "Weekly Meal Plan",
+            style: TextStyle(
+              color: themeColor,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'RaleWay',
+            ),
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
-          elevation: 0,
+          elevation: 5,
           foregroundColor: themeColor,
         ),
         body: Column(
@@ -101,7 +112,10 @@ class _NutritionPageState extends State<NutritionPage> {
                       ),
                     );
                   } else {
+                    // ça veut dire que snapshot contient la donnée (snapshot.hasData)
                     final weekData = snapshot.data!;
+
+                    // ! explanation :  "I’m sure this value is NOT null, even though Dart’s type system can’t guarantee it. Trust me, and proceed without null checks."
                     return ListView(
                       children:
                           weekData.entries.map((entry) {
@@ -111,18 +125,34 @@ class _NutritionPageState extends State<NutritionPage> {
                                 entry.value['nutrients'] as dynamic;
 
                             return Card(
-                              color: Colors.black.withOpacity(0.3),
-                              margin: const EdgeInsets.all(8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide.none,
+                              ),
+                              elevation: 5,
+                              color: Colors.black87,
+                              margin: EdgeInsets.all(10),
                               child: ExpansionTile(
+                                onExpansionChanged:
+                                    (expanded) => setState(
+                                      () => _isExpandedMap[day] = expanded,
+                                    ),
+                                trailing: Icon(
+                                  _isExpandedMap[day] ?? false
+                                      ? Icons.expand_less
+                                      : Icons.expand_more,
+                                  color:
+                                      _isExpandedMap[day] ?? false
+                                          ? Colors.red.shade400
+                                          : Colors.blue,
+                                ),
                                 title: Text(
                                   day.toUpperCase(),
                                   style: TextStyle(
                                     color: themeColor,
                                     shadows: [
                                       Shadow(
-                                        color: Colors.blue.shade900.withOpacity(
-                                          0.8,
-                                        ),
+                                        color: Colors.blue.shade900,
                                         blurRadius: 15.0,
                                       ),
                                       Shadow(
@@ -168,73 +198,107 @@ class _NutritionPageState extends State<NutritionPage> {
                                     ),
                                   ],
                                 ),
+                                expansionAnimationStyle: AnimationStyle(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: const Duration(milliseconds: 350),
+                                  reverseDuration: const Duration(
+                                    milliseconds: 200,
+                                  ),
+                                ),
                                 children:
                                     meals.map((meal) {
-                                      return ListTile(
-                                        title: Text(
-                                          meal['title'],
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                      return Container(
+                                        margin: const EdgeInsets.only(
+                                          bottom: 10,
                                         ),
-                                        subtitle: Text(
-                                          'Ready in ${meal['readyInMinutes']} min',
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                        leading: GestureDetector(
-                                          onTap:
-                                              () => _showImagePopup(
-                                                context,
-                                                meal['id'],
+                                        child: ListTile(
+                                          title: Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 0.0,
+                                            ),
+                                            child: Text(
+                                              meal['title'],
+                                              style: GoogleFonts.salsa(
+                                                fontSize: 15,
                                               ),
-                                          child: Image.network(
-                                            'https://spoonacular.com/recipeImages/${meal['image']}',
-                                            width: 60,
-                                            height: 60,
-                                            filterQuality: FilterQuality.medium,
-                                            errorBuilder:
-                                                (_, __, ___) => Icon(
-                                                  Icons.image_not_supported,
-                                                  color: themeColor,
-                                                ),
+                                              textAlign: TextAlign.start,
+                                            ),
                                           ),
-                                        ),
-                                        trailing: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Flexible(
-                                              child: IconButton(
-                                                onPressed:
-                                                    () => _launchURL(
-                                                      'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
-                                                    ),
-                                                icon: Icon(
-                                                  Icons.arrow_outward,
-                                                  color: Colors.blue.shade300,
+                                          subtitle: Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                const TextSpan(
+                                                  text: 'Ready in ',
                                                 ),
+                                                TextSpan(
+                                                  text:
+                                                      '${meal['readyInMinutes']} min',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                  ), // the dynamic value will look slightly bolder in terms of font weight
+                                                ),
+                                              ],
+                                              style: const TextStyle(
+                                                color: Colors.white70,
                                               ),
                                             ),
-                                            Flexible(
-                                              child: IconButton(
-                                                onPressed:
-                                                    () => _toggleFavorite(
-                                                      meal['id'],
-                                                    ),
-                                                icon: Icon(
-                                                  Icons.favorite,
-                                                  color:
-                                                      _favoriteMealIds.contains(
-                                                            meal['id'],
-                                                          )
-                                                          ? Colors.blue.shade300
-                                                          : null,
+                                          ),
+                                          leading: GestureDetector(
+                                            onTap:
+                                                () => _showNutritionLabelImage(
+                                                  context,
+                                                  meal['id'],
+                                                ),
+                                            child: Image.network(
+                                              'https://spoonacular.com/recipeImages/${meal['image']}',
+                                              width: 70,
+                                              height: 70,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.medium,
+                                              errorBuilder:
+                                                  (_, __, ___) => Icon(
+                                                    Icons.image_not_supported,
+                                                    color: themeColor,
+                                                  ),
+                                            ),
+                                          ),
+                                          trailing: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Flexible(
+                                                child: IconButton(
+                                                  onPressed:
+                                                      () => _launchURL(
+                                                        'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
+                                                      ),
+                                                  icon: Icon(
+                                                    Icons.arrow_outward,
+                                                    color: Colors.blue.shade300,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Flexible(
+                                                child: IconButton(
+                                                  onPressed:
+                                                      () => _toggleFavorite(
+                                                        meal['id'],
+                                                      ),
+                                                  icon: Icon(
+                                                    Icons.favorite,
+                                                    color:
+                                                        _favoriteMealIds
+                                                                .contains(
+                                                                  meal['id'],
+                                                                )
+                                                            ? Colors.purple
+                                                            : null,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       );
                                     }).toList(),
