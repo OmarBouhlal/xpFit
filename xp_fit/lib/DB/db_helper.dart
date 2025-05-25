@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DBHelper {
   static Database? _db;
+
 
   static Future<Database> get database async {
     if (_db != null) return _db!;
@@ -11,10 +13,11 @@ class DBHelper {
   }
 
   static Future<Database> _initDB() async {
+    final int _databaseVersion = 4; 
     String path = join(await getDatabasesPath(), 'users.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: _databaseVersion,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE users (
@@ -25,14 +28,17 @@ class DBHelper {
             weight REAL NOT NULL,
             height REAL NOT NULL,
             birthDate TEXT NOT NULL,
-            gender TEXT 
+            gender TEXT,
+            obj_weight REAL
           );
         ''');
 
         await db.execute('''
           CREATE TABLE exercices (
             id_exercice INTEGER PRIMARY KEY,
-            name_exercice TEXT NOT NULL
+            name_exercice TEXT NOT NULL,
+            gifUrl TEXT,
+            instructions TEXT
           );
         ''');
 
@@ -81,13 +87,21 @@ class DBHelper {
         ''');
 
         await db.execute('''
-          CREATE TABLE objectives (
+          CREATE TABLE user_objective (
+            id_user_obj PRIMARY KEY AUTOINCREMENT,
+            id_obj INTEGER NOT NULL ,
+            id_user INTEGER NOT NULL
+          );
+        ''');
+
+        await db.execute('''
+          CREATE TABLE objective (
             id_obj INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_user INTEGER NOT NULL,
-            obj_weight REAL NOT NULL
+            name_obj TEXT NOT NULL
           );
         ''');
       },
+
     );
   }
 
@@ -121,4 +135,7 @@ class DBHelper {
     );
     return result.isNotEmpty;
   }
+
+  
+  
 }

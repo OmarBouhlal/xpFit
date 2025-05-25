@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xp_fit/DB/db_helper.dart';
 import 'package:xp_fit/UI/widgets/button.widget.dart';
 import 'package:xp_fit/UI/widgets/textfield.widget.dart';
 
@@ -64,13 +65,33 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 8,
                   ),
-                  //Adds vertical space (20 pixels) between widgets. Used her
                   // Login button
                   XPFitButton(
                     text: 'Login',
-                    onPressed: () => {
-                      Navigator.pushNamed(context, '/home')
+                    onPressed: () async {
+                        // Handle Login logic here
+                        final email = _emailController.text.trim();
+                        final password = _passwordController.text;
+
+                        if (email.isEmpty ||
+                            password.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please fill all fields correctly.")),
+                          );
+                          return;
+                        }
+
+                        await DBHelper.checkLogin(
+                          email,
+                          password,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Registration successful!")),
+                        );
+                        Navigator.pushReplacementNamed(context, '/home');
                       },
+                      
                   ),
                 ],
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:xp_fit/DB/db_helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -167,12 +168,14 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
+                    Navigator.pushNamed(context, '/exercice');
 
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                 ),
               ],
             ),
