@@ -136,6 +136,29 @@ class DBHelper {
     return result.isNotEmpty;
   }
 
-  
+  static Future<List<Map<String, dynamic>>> getFavorites(
+    String selectedFilter,
+    String email,
+  ) async {
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      final userId = user.first['id_user'] as int;
+      final results = await db.query(
+        selectedFilter,
+        where: 'id_user = ?',
+        whereArgs: [userId],
+      );
+      return results;
+    } catch (e) {
+      print('Error fetching favorites: $e');
+      rethrow; // Re-throw the error to handle it in the calling code
+    }
+  }
   
 }
