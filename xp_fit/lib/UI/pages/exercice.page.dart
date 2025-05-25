@@ -155,7 +155,7 @@ void initState() {
         ),
         bottomNavigationBar: Theme(
           // Override the bottom nav theme to ensure transparency
-          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          data: Theme.of(context).copyWith(canvasColor: const Color.fromARGB(0, 0, 0, 0)),
           child: BottomAppBar(
             color: Colors.transparent,
             elevation: 0,
@@ -164,7 +164,9 @@ void initState() {
               children: [
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
@@ -174,9 +176,9 @@ void initState() {
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/exercice');
-
+                  onPressed: (
+                    
+                  ) {
                   },
                 ),
                 IconButton(
@@ -305,7 +307,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     backgroundColor: Colors.black54,
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? const Color.fromARGB(255, 82, 229, 255) : Colors.white,
+                      color: isFavorite ? const Color.fromARGB(255, 82, 160, 255) : Colors.white,
                     ),
                   ),
                 ),
