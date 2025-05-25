@@ -80,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
                           );
                           return;
                         }
-
                         await DBHelper.checkLogin(
                           email,
                           password,
