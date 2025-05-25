@@ -5,7 +5,6 @@ import 'package:path/path.dart';
 class DBHelper {
   static Database? _db;
 
-
   static Future<Database> get database async {
     if (_db != null) return _db!;
     _db = await _initDB();
@@ -13,7 +12,7 @@ class DBHelper {
   }
 
   static Future<Database> _initDB() async {
-    final int _databaseVersion = 5; 
+    final int _databaseVersion = 6; // Increment version to trigger schema update
     String path = join(await getDatabasesPath(), 'users.db');
     return await openDatabase(
       path,
@@ -89,8 +88,8 @@ class DBHelper {
 
         await db.execute('''
           CREATE TABLE user_objective (
-            id_user_obj PRIMARY KEY AUTOINCREMENT,
-            id_obj INTEGER NOT NULL ,
+            id_user_obj INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_obj INTEGER NOT NULL,
             id_user INTEGER NOT NULL
           );
         ''');
@@ -102,7 +101,20 @@ class DBHelper {
           );
         ''');
       },
-
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Handle database upgrades
+        if (oldVersion < 6) {
+          // Drop and recreate problematic table
+          await db.execute('DROP TABLE IF EXISTS user_objective');
+          await db.execute('''
+            CREATE TABLE user_objective (
+              id_user_obj INTEGER PRIMARY KEY AUTOINCREMENT,
+              id_obj INTEGER NOT NULL,
+              id_user INTEGER NOT NULL
+            );
+          ''');
+        }
+      },
     );
   }
 
@@ -135,8 +147,22 @@ class DBHelper {
       whereArgs: [email, password],
     );
     return result.isNotEmpty;
+  }  
+  
+  static Future<void> add_avatar(String email, String avatar) async {    
+    final db = await database;
+    await db.update(
+      'users',
+      {'avatar': avatar},
+      where: 'email = ?',
+      whereArgs: [email]
+    );
   }
 
-  
-  
+  // Helper method to reset database (for development/testing)
+  static Future<void> resetDatabase() async {
+    String path = join(await getDatabasesPath(), 'users.db');
+    await deleteDatabase(path);
+    _db = null;
+  }
 }
