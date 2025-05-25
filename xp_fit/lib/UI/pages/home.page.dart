@@ -162,14 +162,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-<<<<<<< HEAD
                   onPressed: () {
                     Navigator.pushNamed(context, '/exercice');
 
                   },
-=======
-                  onPressed: () {},
->>>>>>> omar-branch-cache
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
