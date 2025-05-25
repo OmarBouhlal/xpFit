@@ -117,7 +117,6 @@ class _RegisterPageState extends State<RegisterPage> {
                             onPressed: _handleRegistration,
                           ),
                   ),
-      
                 ],
               ),
             ),

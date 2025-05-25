@@ -16,7 +16,7 @@ class _NutritionPageState extends State<NutritionPage> {
   late Future<Duration?> _cacheAgeFuture;
   final Set<int> _favoriteMealIds = {};
   final Map<String, bool> _isExpandedMap = {};
-
+  
   void _launchURL(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
       throw 'Could not launch $url';
@@ -66,6 +66,9 @@ class _NutritionPageState extends State<NutritionPage> {
 
   @override
   Widget build(BuildContext context) {
+    //the email parametre passed from home
+    final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -327,21 +330,24 @@ class _NutritionPageState extends State<NutritionPage> {
               children: [
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
-                  onPressed: () => Navigator.pushNamed(context, '/home'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home',arguments: emailRetrieve);
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
-                  onPressed: (){
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/nutrition',arguments:emailRetrieve);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/exercice');
+                    Navigator.pushNamed(context, '/exercice',arguments: emailRetrieve);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.sports_gymnastics, color: themeColor),
+                  icon: Icon(Icons.favorite, color: themeColor),
                   onPressed: () {},
                 ),
               ],

@@ -146,18 +146,20 @@ class _HomePageState extends State<HomePage> {
               children: [
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home',arguments: email);
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/nutrition');
+                    Navigator.pushNamed(context, '/nutrition',arguments:email);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/exercice');
+                    Navigator.pushNamed(context, '/exercice',arguments: email);
                   },
                 ),
                 IconButton(

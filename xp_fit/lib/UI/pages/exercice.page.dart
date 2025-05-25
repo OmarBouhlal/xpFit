@@ -41,7 +41,11 @@ void initState() {
 }
   @override
   Widget build(BuildContext context) {
-      final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+
+    //user email that enable us to identify the user to send it back as argument to the home or loved page
+    final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
+
+    final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
 
     return Padding(
       padding: const EdgeInsets.only(top:10.0),
@@ -165,26 +169,24 @@ void initState() {
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamed(context, '/home',arguments: emailRetrieve);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/nutrition');
+                    Navigator.pushNamed(context, '/nutrition',arguments:emailRetrieve);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: (
-                    
-                  ) {
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/exercice',arguments: emailRetrieve);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.sports_gymnastics, color: themeColor),
-                  onPressed: () {
-                  },
+                  icon: Icon(Icons.favorite, color: themeColor),
+                  onPressed: () {},
                 ),
               ],
             ),
