@@ -29,7 +29,8 @@ class DBHelper {
             height REAL NOT NULL,
             birthDate TEXT,
             gender TEXT,
-            obj_weight REAL
+            obj_weight REAL,
+            avatar TEXT
           );
         ''');
 

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      initialRoute: "/",
+      initialRoute: "/home",
     );
     
 
