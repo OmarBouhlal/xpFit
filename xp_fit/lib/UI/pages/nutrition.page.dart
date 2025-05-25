@@ -331,11 +331,14 @@ class _NutritionPageState extends State<NutritionPage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
-                  onPressed: () {},
+                  onPressed: (){
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/exercice');
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
