@@ -80,7 +80,6 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +98,7 @@ class _HomePageState extends State<HomePage> {
       // Scaffold inside the container with a transparent background
       child: Scaffold(
         backgroundColor: Colors.transparent, // Make scaffold background transparent
-        
+
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(
@@ -136,6 +135,39 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : _buildMainContent(),
+        bottomNavigationBar: Theme(
+          // Override the bottom nav theme to ensure transparency
+          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          child: BottomAppBar(
+            color: Colors.transparent,
+            elevation: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.home, color: themeColor),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.restaurant, color: themeColor),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/nutrition');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.fitness_center_sharp, color: themeColor),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/exercice');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.favorite, color: themeColor),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -185,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      right: 2.0,
+                      right: 35.0,
                     ), // Move userName slightly to the left
                     child: Text(
                       username ?? 'User', // Use the loaded username or fallback
