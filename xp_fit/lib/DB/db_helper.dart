@@ -13,7 +13,7 @@ class DBHelper {
   }
 
   static Future<Database> _initDB() async {
-    final int _databaseVersion = 4; 
+    final int _databaseVersion = 5; 
     String path = join(await getDatabasesPath(), 'users.db');
     return await openDatabase(
       path,
@@ -27,7 +27,7 @@ class DBHelper {
             password TEXT NOT NULL,
             weight REAL NOT NULL,
             height REAL NOT NULL,
-            birthDate TEXT NOT NULL,
+            birthDate TEXT,
             gender TEXT,
             obj_weight REAL
           );
