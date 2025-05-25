@@ -195,9 +195,8 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.sports_gymnastics, color: themeColor),
-                  onPressed: () {
-                  },
+                  icon: Icon(Icons.favorite , color: themeColor),
+                  onPressed: () {},
                 ),
               ],
             ),
