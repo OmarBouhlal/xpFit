@@ -11,11 +11,7 @@ class FilteredElementCard extends StatefulWidget {
 class _FilteredElementCardState extends State<FilteredElementCard> {
   bool isFavorite = false;
 
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -101,23 +97,7 @@ class _FilteredElementCardState extends State<FilteredElementCard> {
                 ),
               ),
               //heart
-              Positioned(
-                top: 8,
-                right: 8,
-                child: GestureDetector(
-                  onTap: toggleFavorite,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black54,
-                    child: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color:
-                          isFavorite
-                              ? const Color.fromARGB(255, 82, 160, 255)
-                              : Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+              
             ],
           ),
         ),

@@ -80,16 +80,22 @@ class _LoginPageState extends State<LoginPage> {
                           );
                           return;
                         }
-
-                        await DBHelper.checkLogin(
+                        bool isUser = await DBHelper.checkLogin(
                           email,
                           password,
                         );
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Registration successful!")),
-                        );
-                        Navigator.pushReplacementNamed(context, '/home');
+                        if(isUser){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Login successfuly!")),
+                          );
+                          Navigator.pushReplacementNamed(context, '/home', arguments: email);
+                        }
+                        else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Invalid Inforamtions!")),
+                          );
+                        }
                       },
                       
                   ),

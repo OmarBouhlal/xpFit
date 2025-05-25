@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:xp_fit/DB/db_helper.dart';
 import '../../API/exercice.api.dart';
 
 
@@ -41,7 +42,11 @@ void initState() {
 }
   @override
   Widget build(BuildContext context) {
-      final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+
+    //user email that enable us to identify the user to send it back as argument to the home or loved page
+    final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
+
+    final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
 
     return Padding(
       padding: const EdgeInsets.only(top:10.0),
@@ -147,7 +152,7 @@ void initState() {
                       itemCount: exercises.length,
                       itemBuilder: (context, index) {
                         final exercise = exercises[index];
-                        return ExerciseCard(exercise: exercise,);
+                        return ExerciseCard(exercise: exercise, email :emailRetrieve);
                       },
                     ),
             ),
@@ -155,7 +160,7 @@ void initState() {
         ),
         bottomNavigationBar: Theme(
           // Override the bottom nav theme to ensure transparency
-          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          data: Theme.of(context).copyWith(canvasColor: const Color.fromARGB(0, 0, 0, 0)),
           child: BottomAppBar(
             color: Colors.transparent,
             elevation: 0,
@@ -164,24 +169,26 @@ void initState() {
               children: [
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home',arguments: emailRetrieve);
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/nutrition');
+                    Navigator.pushNamed(context, '/nutrition',arguments:emailRetrieve);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/exercice');
-
+                    Navigator.pushNamed(context, '/exercice',arguments: emailRetrieve);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.sports_gymnastics, color: themeColor),
+                  icon: Icon(Icons.favorite, color: themeColor),
                   onPressed: () {
+                    Navigator.pushNamed(context, '/favourite',arguments: emailRetrieve);
                   },
                 ),
               ],
@@ -197,8 +204,9 @@ void initState() {
 
 class ExerciseCard extends StatefulWidget {
   final dynamic exercise;
+  final String email;
 
-  const ExerciseCard({super.key, required this.exercise});
+  const ExerciseCard({super.key, required this.exercise , required this.email});
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -208,8 +216,10 @@ class _ExerciseCardState extends State<ExerciseCard> {
   bool isFavorite = false;
 
   void toggleFavorite() {
+    DBHelper.addExercice(widget.email , widget.exercise["id"].toString() , widget.exercise["name"].toString(), widget.exercise["gifUrl"].toString(), widget.exercise["instructions"]);
     setState(() {
       isFavorite = !isFavorite;
+      //print("itouuuuuub");
     });
   }
 
@@ -305,7 +315,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     backgroundColor: Colors.black54,
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? const Color.fromARGB(255, 82, 229, 255) : Colors.white,
+                      color: isFavorite ? const Color.fromARGB(255, 82, 160, 255) : Colors.white,
                     ),
                   ),
                 ),

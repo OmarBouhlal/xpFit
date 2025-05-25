@@ -10,16 +10,70 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
+
+
   List<Map<String, dynamic>> filteredElements = [];
-  String selectedFilter = 'user_exercices';
+  String selectedFilter = 'exe_user';
+  
+  // Define variables at the class level
+  String? email;
+  // Loading state
   bool isLoading = true;
+  bool hasError = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Load user data when the page dependencies change
+    final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
+    loadUser(emailRetrieve);
+  }
+
+  void loadUser(String emailArg) async {
+    try {
+      setState(() {
+        isLoading = true;
+        hasError = false;
+      });
+
+      final user = await DBHelper.retrieve_user(emailArg);
+      if (user != null) {
+        setState(() {
+          email = user['email'];
+          isLoading = false;
+        });
+      loadInitialData();
+
+      } else {
+        setState(() {
+          hasError = true;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error loading user: $e');
+      setState(() {
+        hasError = true;
+        isLoading = false;
+      });
+    }
+  }
+
+
 
   Future<void> loadInitialData() async {
     try {
+      
+
+      await DBHelper.debugTables();
+
+
+
+
       final filteredElementsList = await DBHelper.getFavorites(
-        selectedFilter,
-        userEmail!,
+        selectedFilter,email!
       );
+      
 
       setState(() {
         filteredElements = filteredElementsList;
@@ -33,11 +87,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   void initState() {
     super.initState();
-    loadInitialData();
   }
 
   @override
   Widget build(BuildContext context) {
+
     final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
@@ -106,7 +160,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           },
                           items: [
                             DropdownMenuItem<String>(
-                              value: "user_exercices",
+                              value: "exe_user",
                               child: Text(
                                 "Exercices",
                                 style: const TextStyle(color: Colors.white),
@@ -165,25 +219,25 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamed(context, '/home',arguments: email);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/nutrition');
+                    Navigator.pushNamed(context, '/nutrition',arguments:email);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/exercice');
+                    Navigator.pushNamed(context, '/exercice',arguments: email);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.sports_gymnastics, color: themeColor),
+                  icon: Icon(Icons.favorite, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '');
+                    Navigator.pushNamed(context, '/favourite',arguments: email);
                   },
                 ),
               ],
