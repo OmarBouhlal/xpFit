@@ -147,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Registration successful!")),
                         );
-                        Navigator.pushReplacementNamed(context, '/');
+                        Navigator.pushReplacementNamed(context, '/chooseAvatar');
                       },
                       
                     ),

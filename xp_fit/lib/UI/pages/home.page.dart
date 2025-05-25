@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:xp_fit/UI/widgets/Objective.widget.dart';
+import 'package:xp_fit/UI/widgets//DailyQuest.widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,35 +40,26 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         backgroundColor:
             Colors.transparent, // Make scaffold background transparent
-        appBar: AppBar(
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-            ),
-          ),
-          centerTitle: true, // This centers the title in the AppBar
-          title: Padding(
-            padding: const EdgeInsets.only(top: 8), // Add vertical padding
-            child: Image.network('assets/sdsdff.png', height: 60, width: 60),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
+   
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
+      padding: const EdgeInsets.only(
+        top: 20.0, // Add margin from the top
+      ),
+            ),    
+            
+            Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
-                vertical: 8.0,
+                vertical: 0.0,
               ),
+              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   // Level indicator, XP text, and user name
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          right: 65.0,
+                          right: 2.0,
                         ), // Move userName slightly to the left
                         child: Text(
                           userName,
@@ -103,6 +96,7 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
@@ -130,11 +124,14 @@ class _HomePageState extends State<HomePage> {
                         width: 10,
                       ), // Space between the progress bar and the icon
                       Transform.translate(
-                        offset: Offset(0, -15), // Move the icon slightly upward
-                        child: FaIcon(
-                          FontAwesomeIcons.dragon,
-                          color: themeColor,
-                          size: 45, // Slightly larger size for the profile icon
+                        offset: Offset(
+                          0,
+                          -15,
+                        ), // Move the image slightly upward
+                        child: Image.asset(
+                          'assets/avatars/avatar1.png', // Replace with your asset path
+                          height: 120, // Adjust the size as needed
+                          width: 120,
                         ),
                       ),
                     ],
@@ -142,7 +139,20 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SizedBox(height: 20), // Add spacing for other body content
+            SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: const [
+                    PersonalQuestsWidget(),
+                    SizedBox(height: 20),
+                    DailyQuestSelectorWidget(),
+                  ],
+                ),
+              ),
+            ),
+
+            // Add spacing for other body content
           ],
         ),
         bottomNavigationBar: Theme(
@@ -166,9 +176,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
