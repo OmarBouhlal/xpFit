@@ -292,7 +292,12 @@ class _NutritionPageState extends State<NutritionPage> {
                                                                 .contains(
                                                                   meal['id'],
                                                                 )
-                                                            ? Colors.purple
+                                                            ? Color.fromARGB(
+                                                              255,
+                                                              82,
+                                                              229,
+                                                              255,
+                                                            )
                                                             : null,
                                                   ),
                                                 ),
