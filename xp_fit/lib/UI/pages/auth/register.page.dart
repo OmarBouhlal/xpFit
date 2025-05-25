@@ -126,8 +126,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             password.isEmpty ||
                             weight == null ||
                             height == null ||
-                            gender == null ||
-                            birthDate == null) {
+                            gender == null
+                          ) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Please fill all fields correctly.")),
                           );
@@ -140,14 +140,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           password,
                           weight,
                           height,
-                          birthDate,
+                          birthDate!,
                           gender,
                         );
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Registration successful!")),
                         );
-                        Navigator.pushReplacementNamed(context, '/chooseAvatar');
+                        Navigator.pushNamed(context, '/');
                       },
                       
                     ),

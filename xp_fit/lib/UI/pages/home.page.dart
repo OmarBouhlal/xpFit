@@ -40,7 +40,20 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         backgroundColor:
             Colors.transparent, // Make scaffold background transparent
-   
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end),
+          ),
+          centerTitle: true, // This centers the title in the AppBar
+
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -176,7 +189,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/exercice');
+
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.favorite , color: themeColor),
