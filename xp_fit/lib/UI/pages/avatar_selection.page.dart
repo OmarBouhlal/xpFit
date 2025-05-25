@@ -133,6 +133,7 @@ class _AvatarChoosingPageState extends State<AvatarChoosingPage> {
                         onPressed: () async {
                           if (selectedAvatar != null) {
                             await DBHelper.add_avatar(emailRetrieve, selectedAvatar!);
+                            Navigator.pushNamed(context, '/home', arguments: emailRetrieve);
                             // You can navigate or show confirmation here
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

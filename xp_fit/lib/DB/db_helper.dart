@@ -165,4 +165,10 @@ class DBHelper {
     await deleteDatabase(path);
     _db = null;
   }
+
+  static Future<Map<String,dynamic>?> retrieve_user(String email) async {
+    final db = await database;
+    final result = await db.query('users', where: 'email = ?', whereArgs: [email]);
+    return result.isNotEmpty ? result.first : null;
+  } 
 }
