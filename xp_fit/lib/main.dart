@@ -31,7 +31,11 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
         scaffoldBackgroundColor: Colors.transparent,
       ),
+<<<<<<< Updated upstream
       initialRoute: "/registration", // Set the initial route to HomePage
+=======
+      initialRoute: "/registration", // Set the initial route to registration page
+>>>>>>> Stashed changes
     );
     
 

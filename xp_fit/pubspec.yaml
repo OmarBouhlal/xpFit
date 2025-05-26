@@ -42,8 +42,11 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   shared_preferences: ^2.5.3
   google_fonts: ^6.2.1
+<<<<<<< Updated upstream
   sqflite_common: ^2.4.2
   sqflite_common_ffi: ^2.3.0  
+=======
+>>>>>>> Stashed changes
   sqflite_common_ffi_web: ^1.0.0
 
 dev_dependencies:
