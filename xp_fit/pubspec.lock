@@ -430,7 +430,7 @@ packages:
     source: hosted
     version: "2.4.1"
   sqflite_common:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sqflite_common
       sha256: "84731e8bfd8303a3389903e01fb2141b6e59b5973cacbb0929021df08dddbe8b"
@@ -438,11 +438,7 @@ packages:
     source: hosted
     version: "2.5.5"
   sqflite_common_ffi:
-<<<<<<< Updated upstream
     dependency: "direct main"
-=======
-    dependency: transitive
->>>>>>> Stashed changes
     description:
       name: sqflite_common_ffi
       sha256: "1f3ef3888d3bfbb47785cc1dda0dc7dd7ebd8c1955d32a9e8e9dae1e38d1c4c1"
@@ -450,13 +446,13 @@ packages:
     source: hosted
     version: "2.3.5"
   sqflite_common_ffi_web:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: sqflite_common_ffi_web
-      sha256: "983cf7b33b16e6bc086c8e09f6a1fae69d34cdb167d7acaf64cbd3515942d4e6"
+      sha256: "61ea702e7aba727f28be7ead00b84c19c745cd4a4934d0c41473303df11ac9ea"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "0.4.5+4"
   sqflite_darwin:
     dependency: transitive
     description:
