@@ -194,63 +194,64 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Level indicator, XP text, and user name
+              // Level indicator - aligned to the left
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Level $level',
-                        style: TextStyle(
-                          color: themeColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 15), // Space between Level and XP
-                      Text(
-                        '${currentXP.toInt()}/${maxXP.toInt()} XP',
-                        style: TextStyle(
-                          color: themeColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 35.0,
-                    ), // Move userName slightly to the left
-                    child: Text(
-                      username ?? 'User', // Use the loaded username or fallback
-                      style: TextStyle(
-                        color: themeColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                      textAlign: TextAlign.center,
+                  Text(
+                    'Level $level',
+                    style: TextStyle(
+                      color: themeColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 5),
-              // XP Progress bar and person icon
+              SizedBox(height: 8),
+              
+              // Username - aligned to the left (same vertical line as level)
+              Text(
+                username ?? 'User',
+                style: TextStyle(
+                  color: themeColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28, // Large size for prominence
+                  letterSpacing: 1.2,
+                ),
+              ),
+              SizedBox(height: 2),
+              
+              // XP progress section with avatar
               Row(
                 children: [
                   Expanded(
                     flex: 8, // Adjust the flex to control the progress bar width
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: currentXP / maxXP,
-                        backgroundColor: Colors.grey.withOpacity(0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          themeColor,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // XP text positioned at the left end above the progress bar
+                        Text(
+                          '${currentXP.toInt()}/${maxXP.toInt()}XP',
+                          style: TextStyle(
+                            color: themeColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        minHeight: 10,
-                      ),
+                        SizedBox(height: 4),
+                        // Progress bar
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: currentXP / maxXP,
+                            backgroundColor: Colors.grey.withOpacity(0.3),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              themeColor,
+                            ),
+                            minHeight: 10,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -319,5 +320,4 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
 }
