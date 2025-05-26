@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:xp_fit/DB/db_helper.dart';
 import '../../API/exercice.api.dart';
 
 
@@ -151,7 +152,7 @@ void initState() {
                       itemCount: exercises.length,
                       itemBuilder: (context, index) {
                         final exercise = exercises[index];
-                        return ExerciseCard(exercise: exercise,);
+                        return ExerciseCard(exercise: exercise, email :emailRetrieve);
                       },
                     ),
             ),
@@ -186,7 +187,9 @@ void initState() {
                 ),
                 IconButton(
                   icon: Icon(Icons.favorite, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/favourite',arguments: emailRetrieve);
+                  },
                 ),
               ],
             ),
@@ -201,8 +204,9 @@ void initState() {
 
 class ExerciseCard extends StatefulWidget {
   final dynamic exercise;
+  final String email;
 
-  const ExerciseCard({super.key, required this.exercise});
+  const ExerciseCard({super.key, required this.exercise , required this.email});
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -212,8 +216,10 @@ class _ExerciseCardState extends State<ExerciseCard> {
   bool isFavorite = false;
 
   void toggleFavorite() {
+    DBHelper.addExercice(widget.email , widget.exercise["id"].toString() , widget.exercise["name"].toString(), widget.exercise["gifUrl"].toString(), widget.exercise["instructions"]);
     setState(() {
       isFavorite = !isFavorite;
+      //print("itouuuuuub");
     });
   }
 

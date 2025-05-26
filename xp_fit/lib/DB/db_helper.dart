@@ -1,10 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-<<<<<<< Updated upstream
-// For web, use a simple in-memory storage
-// For mobile, use SQLite (you'll need to keep your original SQLite code for mobile)
-=======
 
 class DBHelper {
   static Database? _db;
@@ -16,7 +12,7 @@ class DBHelper {
   }
 
   static Future<Database> _initDB() async {
-    final int _databaseVersion = 6; // Increment version to trigger schema update
+    final int _databaseVersion = 9; // Increment version to trigger schema update
     String path = join(await getDatabasesPath(), 'users.db');
     return await openDatabase(
       path,
@@ -38,8 +34,10 @@ class DBHelper {
         ''');
 
         await db.execute('''
-          CREATE TABLE exercices (
-            id_exercice INTEGER PRIMARY KEY,
+          CREATE TABLE exe_user (
+            id_user_exercice INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_exercice TEXT,
+            id_user INTEGER NOT NULL,
             name_exercice TEXT NOT NULL,
             gifUrl TEXT,
             instructions TEXT
@@ -58,14 +56,6 @@ class DBHelper {
           CREATE TABLE muscles (
             id_muscle INTEGER PRIMARY KEY AUTOINCREMENT,
             name_muscle TEXT NOT NULL
-          );
-        ''');
-
-        await db.execute('''
-          CREATE TABLE user_exe (
-            id_user_exe INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_user INTEGER,
-            id_exercice INTEGER NOT NULL
           );
         ''');
 
@@ -121,7 +111,6 @@ class DBHelper {
       },
     );
   }
->>>>>>> Stashed changes
 
 class WebStorageHelper {
   // In-memory storage for web (this is just for demo/development)
@@ -190,51 +179,102 @@ class WebStorageHelper {
   }
 }
 
-// Modified DBHelper that uses web storage for web and SQLite for mobile
-class DBHelper {
-  // Your existing SQLite code here for mobile...
-  
-  static Future<void> registration(
-    String username,
-    String email,
-    String password,
-    double weight,
-    double height,
-    String birthDate,
-    String gender,
+  static Future<Map<String,dynamic>?> retrieve_user(String email) async {
+    final db = await database;
+    final result = await db.query('users', where: 'email = ?', whereArgs: [email]);
+    return result.isNotEmpty ? result.first : null;
+  } 
+
+    static Future<List<Map<String, dynamic>>> getFavorites(
+    String selectedFilter,
+    String? email,
   ) async {
-    if (kIsWeb) {
-      // Use web storage for web
-      await WebStorageHelper.registration(username, email, password, weight, height, birthDate, gender);
-    } else {
-      // Use SQLite for mobile (your existing code)
-      // ... your existing SQLite registration code
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      final userId = user.first['id_user'] as int;
+      final results = await db.query(
+        selectedFilter,
+        where: 'id_user = ?',
+        whereArgs: [userId],
+      );
+      return results;
+    } catch (e) {
+      print('Error fetching favorites: $e');
+      rethrow; // Re-throw the error to handle it in the calling code
+    }
+  }
+
+  static Future<void> addExercice(
+  String email,
+  String id_exercice,
+  String name_exercice,
+  String? gifUrl,
+  List<dynamic> instructions,
+) async {
+  final db = await database;
+  try {
+    final user = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+      limit: 1,
+    );
+    
+    if (user.isEmpty) {
+      print('Error: User not found with email: $email');
+      throw Exception('User not found');
+    }
+    
+    final userId = user.first['id_user'] as int;
+    print("Adding exercise for user ID: $userId");
+    
+    // Check if exercise already exists for this user
+    final existing = await db.query(
+      'exe_user',
+      where: 'id_exercice = ? AND id_user = ?',
+      whereArgs: [id_exercice, userId],
+    );
+    
+    if (existing.isNotEmpty) {
+      print('Exercise already exists in favorites');
+      return;
+    }
+    
+    // Convert instructions list to string if needed
+    String instructionsStr = instructions.join('; ');
+    
+    await db.insert('exe_user', {
+      'id_exercice': id_exercice,
+      'id_user': userId,
+      'name_exercice': name_exercice,
+      'gifUrl': gifUrl,
+      'instructions': instructionsStr,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    
+    print("Exercise added successfully");
+  } catch (e) {
+    print('Error adding exercise: $e');
+    rethrow;
+  }
+}
+
+  // Add this method to your DBHelper class
+  static Future<void> debugTables() async {
+    final db = await database;
+    final tables = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table';"
+    );
+    print('Available tables:');
+    for (var table in tables) {
+      print('- ${table['name']}');
     }
   }
   
-  static Future<bool> checkLogin(String email, String password) async {
-    if (kIsWeb) {
-      return await WebStorageHelper.checkLogin(email, password);
-    } else {
-      // Your existing SQLite login code
-      return false; // Replace with your SQLite code
-    }
-  }
-  
-  static Future<Map<String, dynamic>?> retrieve_user(String email) async {
-    if (kIsWeb) {
-      return await WebStorageHelper.retrieve_user(email);
-    } else {
-      // Your existing SQLite code
-      return null; // Replace with your SQLite code
-    }
-  }
-  
-  static Future<void> add_avatar(String email, String avatar) async {
-    if (kIsWeb) {
-      await WebStorageHelper.add_avatar(email, avatar);
-    } else {
-      // Your existing SQLite code
-    }
-  }
+
 }

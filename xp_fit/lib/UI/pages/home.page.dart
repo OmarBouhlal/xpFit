@@ -164,7 +164,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.favorite, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/favourite',arguments: email);
+                  },
                 ),
               ],
             ),
@@ -318,39 +320,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return Theme(
-      // Override the bottom nav theme to ensure transparency
-      data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-      child: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: Icon(Icons.home, color: themeColor),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.restaurant, color: themeColor),
-              onPressed: () {
-                Navigator.pushNamed(context, '/nutrition');
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.fitness_center_sharp, color: themeColor),
-              onPressed: () {
-                Navigator.pushNamed(context, '/exercice');
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.favorite, color: themeColor),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

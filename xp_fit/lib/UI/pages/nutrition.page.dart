@@ -348,7 +348,9 @@ class _NutritionPageState extends State<NutritionPage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.favorite, color: themeColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/favourite',arguments: emailRetrieve);
+                  },
                 ),
               ],
             ),
