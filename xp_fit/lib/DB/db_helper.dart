@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,7 +36,7 @@ class DBHelper {
   }
 
   static Future<Database> _initDB() async {
-    final int _databaseVersion = 10;
+    final int _databaseVersion = 10; // Increment version to trigger schema update
     String path = join(await getDatabasesPath(), 'users.db');
     
     return await openDatabase(
@@ -93,6 +95,7 @@ class DBHelper {
             image TEXT
           );
         ''');
+
 
         await db.execute('''
           CREATE TABLE user_objective (
@@ -386,37 +389,34 @@ class DBHelper {
   }
 
   static Future<void> debugTables() async {
-    if (kIsWeb) {
-      print('Available tables (Web storage):');
-      for (String table in _webStorage.keys) {
-        print('- $table (${_webStorage[table]!.length} records)');
-      }
-    } else {
-      final db = await database;
-      final tables = await db!.rawQuery("SELECT name FROM sqlite_master WHERE type='table';");
-      print('Available tables:');
-      for (var table in tables) {
-        print('- ${table['name']}');
-      }
+    final db = await database;
+    final tables = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table';"
+    );
+    print('Available tables:');
+    for (var table in tables) {
+      print('- ${table['name']}');
     }
   }
   
+
+  //nutrition stuff
+
   static Future<void> addNutrition(
-    String email,
-    int id_nutrition,
-    String title,
-    String? sourceUrl,
-    String image
+  String email,
+  int id_nutrition,
+  String title,
+  String? sourceUrl,
+  String image
   ) async {
+    final db = await database;
     try {
-      List<Map<String, dynamic>> user;
-      
-      if (kIsWeb) {
-        user = await _webQuery('users', where: 'email = ?', whereArgs: [email], limit: 1);
-      } else {
-        final db = await database;
-        user = await db!.query('users', where: 'email = ?', whereArgs: [email], limit: 1);
-      }
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
       
       if (user.isEmpty) {
         print('Error: User not found with email: $email');
@@ -426,39 +426,31 @@ class DBHelper {
       final userId = user.first['id_user'] as int;
       print("Adding nutrition for user ID: $userId");
       
-      // Check if nutrition already exists
-      List<Map<String, dynamic>> existing;
-      if (kIsWeb) {
-        existing = await _webQuery('user_nut', where: 'id_nutrition = ? AND id_user = ?', whereArgs: [id_nutrition, userId]);
-      } else {
-        final db = await database;
-        existing = await db!.query('user_nut', where: 'id_nutrition = ? AND id_user = ?', whereArgs: [id_nutrition, userId]);
-      }
+      // Check if exercise already exists for this user
+      final existing = await db.query(
+        'user_nut',
+        where: 'id_nutrition = ? AND id_user = ?',
+        whereArgs: [id_nutrition, userId],
+      );
       
       if (existing.isNotEmpty) {
         print('Nutrition already exists in favorites');
         return;
       }
       
-      Map<String, dynamic> nutritionData = {
+      await db.insert('user_nut', {
         'id_nutrition': id_nutrition,
         'id_user': userId,
         'title': title,
         'sourceUrl': sourceUrl,
         'image': image,
-      };
-
-      if (kIsWeb) {
-        await _webInsert('user_nut', nutritionData);
-      } else {
-        final db = await database;
-        await db!.insert('user_nut', nutritionData, conflictAlgorithm: ConflictAlgorithm.replace);
-      }
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
       
       print("Nutrition added successfully");
     } catch (e) {
       print('Error adding nutrition: $e');
       rethrow;
     }
-  }
+}
+
 }

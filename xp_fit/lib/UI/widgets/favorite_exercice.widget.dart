@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class FilteredElementCard extends StatefulWidget {
+class FavoriteExercice extends StatefulWidget {
   final dynamic filteredElement;
-  const FilteredElementCard({super.key,this.filteredElement});
+  const FavoriteExercice({super.key,this.filteredElement});
 
   @override
-  State<FilteredElementCard> createState() => _FilteredElementCardState();
+  State<FavoriteExercice> createState() => _FavoriteExerciceState();
 }
 
-class _FilteredElementCardState extends State<FilteredElementCard> {
+class _FavoriteExerciceState extends State<FavoriteExercice> {
   bool isFavorite = false;
 
   
