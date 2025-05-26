@@ -25,7 +25,7 @@ class _FilteredElementCardState extends State<FilteredElementCard> {
                 borderRadius: BorderRadius.circular(20),
               ),
               title: Text(
-                widget.filteredElement['name'].toString().toUpperCase(),
+                widget.filteredElement['name_exercice'].toString().toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
               content: Text(
@@ -76,7 +76,7 @@ class _FilteredElementCardState extends State<FilteredElementCard> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      widget.filteredElement['name'].toString().toUpperCase(),
+                      widget.filteredElement['name_exercice'].toString().toUpperCase(),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -85,14 +85,7 @@ class _FilteredElementCardState extends State<FilteredElementCard> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      'Equipment: ${widget.filteredElement['equipment']}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white70,
-                      ),
-                    ),
+                    
                   ],
                 ),
               ),

@@ -192,29 +192,58 @@ class DBHelper {
   }
 
   static Future<void> addExercice(
-    String email,
-    String id_exercice,
-    String name_exercice,
-    String? gifUrl,
-    List<dynamic> instructions,
-  ) async {
-    final db = await database;
+  String email,
+  String id_exercice,
+  String name_exercice,
+  String? gifUrl,
+  List<dynamic> instructions,
+) async {
+  final db = await database;
+  try {
     final user = await db.query(
       'users',
       where: 'email = ?',
       whereArgs: [email],
       limit: 1,
     );
-    print("l3b la bghi tl3b");
+    
+    if (user.isEmpty) {
+      print('Error: User not found with email: $email');
+      throw Exception('User not found');
+    }
+    
     final userId = user.first['id_user'] as int;
+    print("Adding exercise for user ID: $userId");
+    
+    // Check if exercise already exists for this user
+    final existing = await db.query(
+      'exe_user',
+      where: 'id_exercice = ? AND id_user = ?',
+      whereArgs: [id_exercice, userId],
+    );
+    
+    if (existing.isNotEmpty) {
+      print('Exercise already exists in favorites');
+      return;
+    }
+    
+    // Convert instructions list to string if needed
+    String instructionsStr = instructions.join('; ');
+    
     await db.insert('exe_user', {
       'id_exercice': id_exercice,
       'id_user': userId,
       'name_exercice': name_exercice,
       'gifUrl': gifUrl,
-      'instructions': instructions,
+      'instructions': instructionsStr,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
+    
+    print("Exercise added successfully");
+  } catch (e) {
+    print('Error adding exercise: $e');
+    rethrow;
   }
+}
 
   // Add this method to your DBHelper class
   static Future<void> debugTables() async {
