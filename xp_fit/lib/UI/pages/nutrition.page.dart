@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:xp_fit/DB/db_helper.dart';
 import '../../API/nutrition.api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,12 +42,15 @@ class _NutritionPageState extends State<NutritionPage> {
     );
   }
 
-  void _toggleFavorite(int mealId) {
+  void _toggleFavorite(dynamic meal , String email) {
+    if (!_favoriteMealIds.contains(meal['id'])) {
+      DBHelper.addNutrition(email, meal['id'], meal['title'], meal['sourceUrl'], meal['image']);
+    }
     setState(() {
-      if (_favoriteMealIds.contains(mealId)) {
-        _favoriteMealIds.remove(mealId);
+      if (_favoriteMealIds.contains(meal['id'])) {
+        _favoriteMealIds.remove(meal['id']);
       } else {
-        _favoriteMealIds.add(mealId);
+        _favoriteMealIds.add(meal['id']);
       }
     });
   }
@@ -285,23 +289,11 @@ class _NutritionPageState extends State<NutritionPage> {
                                               Flexible(
                                                 child: IconButton(
                                                   onPressed:
-                                                      () => _toggleFavorite(
-                                                        meal['id'],
-                                                      ),
+                                                      () => _toggleFavorite(meal, emailRetrieve),
                                                   icon: Icon(
                                                     Icons.favorite,
                                                     color:
-                                                        _favoriteMealIds
-                                                                .contains(
-                                                                  meal['id'],
-                                                                )
-                                                            ? Color.fromARGB(
-                                                              255,
-                                                              82,
-                                                              229,
-                                                              255,
-                                                            )
-                                                            : null,
+                                                        _favoriteMealIds.contains(meal['id'],)? Color.fromARGB(255,82,229,255,): null,
                                                   ),
                                                 ),
                                               ),

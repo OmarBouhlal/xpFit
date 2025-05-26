@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xp_fit/DB/db_helper.dart';
-import 'package:xp_fit/UI/widgets/filteredElement.widget.dart';
+import 'package:xp_fit/UI/widgets/favorite_exercice.widget.dart';
+import 'package:xp_fit/UI/widgets/favorite_nutrition.widget.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -167,7 +168,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                               ),
                             ),
                             DropdownMenuItem<String>(
-                              value: "user_meals",
+                              value: "user_nut",
                               child: Text(
                                 "Meals",
                                 style: const TextStyle(color: Colors.white),
@@ -197,8 +198,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
                         itemCount: filteredElements.length,
                         itemBuilder: (context, index) {
                           final filteredElement = filteredElements[index];
-                          return FilteredElementCard(
+                          return selectedFilter == 'exe_user' ? FavoriteExercice(
                             filteredElement: filteredElement,
+                          ) : FavoriteNutrition(
+                            filteredElement: filteredElement,
+
                           );
                         },
                       ),

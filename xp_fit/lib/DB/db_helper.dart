@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -12,7 +14,7 @@ class DBHelper {
   }
 
   static Future<Database> _initDB() async {
-    final int _databaseVersion = 9; // Increment version to trigger schema update
+    final int _databaseVersion = 10; // Increment version to trigger schema update
     String path = join(await getDatabasesPath(), 'users.db');
     return await openDatabase(
       path,
@@ -62,23 +64,15 @@ class DBHelper {
         await db.execute('''
           CREATE TABLE user_nut (
             id_user_nut INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_user INTEGER,
-            id_nutrition INTEGER NOT NULL
+            id_user INTEGER NOT NULL,
+            id_nutrition INTEGER NOT NULL,
+            title TEXT,
+            sourceUrl TEXT,
+            readyInMinutes INTEGER,
+            image TEXT
           );
         ''');
 
-        await db.execute('''
-          CREATE TABLE meals (
-            id INTEGER PRIMARY KEY,
-            title TEXT,
-            image TEXT,
-            imageType TEXT,
-            readyInMinutes INTEGER,
-            servings INTEGER,
-            sourceUrl TEXT,
-            day TEXT
-          );
-        ''');
 
         await db.execute('''
           CREATE TABLE user_objective (
@@ -257,5 +251,58 @@ class DBHelper {
     }
   }
   
+
+  //nutrition stuff
+
+  static Future<void> addNutrition(
+  String email,
+  int id_nutrition,
+  String title,
+  String? sourceUrl,
+  String image
+  ) async {
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      
+      if (user.isEmpty) {
+        print('Error: User not found with email: $email');
+        throw Exception('User not found');
+      }
+      
+      final userId = user.first['id_user'] as int;
+      print("Adding nutrition for user ID: $userId");
+      
+      // Check if exercise already exists for this user
+      final existing = await db.query(
+        'user_nut',
+        where: 'id_nutrition = ? AND id_user = ?',
+        whereArgs: [id_nutrition, userId],
+      );
+      
+      if (existing.isNotEmpty) {
+        print('Nutrition already exists in favorites');
+        return;
+      }
+      
+      await db.insert('user_nut', {
+        'id_nutrition': id_nutrition,
+        'id_user': userId,
+        'title': title,
+        'sourceUrl': sourceUrl,
+        'image': image,
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
+      
+      print("Nutrition added successfully");
+    } catch (e) {
+      print('Error adding nutrition: $e');
+      rethrow;
+    }
+}
 
 }

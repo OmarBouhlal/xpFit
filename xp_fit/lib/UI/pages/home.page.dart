@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   // Your app's theme color
   final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
-
+  
   // Define variables at the class level
   int? idUser;
   String? username;
@@ -50,6 +50,10 @@ class _HomePageState extends State<HomePage> {
         isLoading = true;
         hasError = false;
       });
+
+      //clean the database  khalilox@gmail.com
+      //DBHelper.resetDatabase();
+
 
       final user = await DBHelper.retrieve_user(emailArg);
       if (user != null) {
