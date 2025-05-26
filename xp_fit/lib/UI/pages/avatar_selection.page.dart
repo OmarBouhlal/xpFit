@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:xp_fit/AUTH/authservice.page.dart';
+import 'package:xp_fit/DB/db_helper.dart';
 import 'package:xp_fit/UI/widgets/button.widget.dart';
 
-class AvatarChoosingPage extends StatelessWidget {
+class AvatarChoosingPage extends StatefulWidget {
+  @override
+  _AvatarChoosingPageState createState() => _AvatarChoosingPageState();
+}
+
+class _AvatarChoosingPageState extends State<AvatarChoosingPage> {
+  String? selectedAvatar = 'assets/avatars/avatar1.png';
+  bool _isLoading = false;
+
   final List<Map<String, String>> avatarList = [
     {'image': 'assets/avatars/avatar1.png', 'name': 'Archer'},
     {'image': 'assets/avatars/avatar2.png', 'name': 'Mage'},
@@ -18,28 +28,28 @@ class AvatarChoosingPage extends StatelessWidget {
     final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
 
-    // Calculate responsive sizes
-    final avatarSize = (screenWidth * 0.3).clamp(
-      100.0,
-      200.0,
-    ); // 30% of screen width, min 100, max 200
-    final horizontalSpacing = screenWidth * 0.02; // 2% of screen width
-    final verticalSpacing = screenHeight * 0.02; // 2% of screen height
+    final avatarSize = (screenWidth * 0.3).clamp(100.0, 200.0);
+    final horizontalSpacing = screenWidth * 0.02;
+    final verticalSpacing = screenHeight * 0.02;
 
-    // Function to create rows of 3 avatars each
     List<Widget> buildAvatarRows() {
       List<Widget> rows = [];
 
       for (int i = 0; i < avatarList.length; i += 3) {
         List<Widget> rowChildren = [];
 
-        // Add up to 3 avatars per row
         for (int j = i; j < i + 3 && j < avatarList.length; j++) {
+          final avatar = avatarList[j];
+          final isSelected = selectedAvatar == avatar['image'];
+
           rowChildren.add(
             GestureDetector(
               onTap: () {
-                print('Selected Avatar: ${avatarList[j]['name']}');
+                setState(() {
+                  selectedAvatar = avatar['image'];
+                });
               },
               child: Column(
                 children: [
@@ -48,19 +58,21 @@ class AvatarChoosingPage extends StatelessWidget {
                     height: avatarSize,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
+                      border:
+                          isSelected
+                              ? Border.all(color: themeColor, width: 4)
+                              : null,
                       image: DecorationImage(
-                        image: AssetImage(avatarList[j]['image']!),
+                        image: AssetImage(avatar['image']!),
                         fit: BoxFit.cover,
                       ),
                     ),
-                    
                   ),
-
                   Text(
-                    avatarList[j]['name']!,
+                    avatar['name']!,
                     style: TextStyle(
-                      color: themeColor,
-                      fontSize: screenWidth * 0.04, // Responsive font size
+                      color: Colors.white,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.5,
                     ),
@@ -71,7 +83,6 @@ class AvatarChoosingPage extends StatelessWidget {
             ),
           );
 
-          // Add spacing between avatars (but not after the last one in the row)
           if (j < i + 2 && j < avatarList.length - 1) {
             rowChildren.add(SizedBox(width: horizontalSpacing));
           }
@@ -84,7 +95,6 @@ class AvatarChoosingPage extends StatelessWidget {
           ),
         );
 
-        // Add vertical spacing between rows (but not after the last row)
         if (i + 3 < avatarList.length) {
           rows.add(SizedBox(height: verticalSpacing));
         }
@@ -96,75 +106,45 @@ class AvatarChoosingPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            const Color.fromARGB(255, 0, 0, 0),
-            const Color.fromARGB(255, 53, 174, 255),
-          ],
+          colors: [Color(0xFF000000), Color(0xFF35AEFF)],
           begin: Alignment.topCenter,
           end: Alignment(0.0, 5.0),
         ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.signal_cellular_alt, color: themeColor),
-                SizedBox(width: 10),
-                Icon(Icons.wifi, color: themeColor),
-                SizedBox(width: 10),
-                Icon(Icons.battery_full, color: themeColor),
-              ],
-            ),
-          ),
-          
-        ),
         body: Column(
           children: [
             SizedBox(
               height: MediaQuery.of(context).padding.top + kToolbarHeight,
-              // Space equal to the AppBar height and status bar
             ),
             Expanded(
               child: Center(
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.start, // Align content to start
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Welcome! Choose your Class',
                       style: TextStyle(
-                        fontSize: screenWidth * 0.06, // Responsive font size
+                        fontSize: screenWidth * 0.06,
                         fontWeight: FontWeight.bold,
                         color: themeColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
-                      height:
-                          verticalSpacing * 3, // Space between text and avatars
-                    ),
+                    SizedBox(height: verticalSpacing * 2),
                     ...buildAvatarRows(),
-                    SizedBox(
-                      height: verticalSpacing * 3,
-                    ), // Optional spacing after avatars
-
+                    SizedBox(height: verticalSpacing * 2),
                     Padding(
-                      padding: EdgeInsets.only(bottom: screenHeight * 0.05),
-                      child: XPFitButton(
-                        text: 'Continue',
-                        onPressed: () {
-                          Navigator.pushNamed(context, "/login");
-                        },
-                        horizontalPadding: screenWidth * 0.1,
-                        verticalPadding: screenHeight * 0.02,
-                      ),
+                      padding: EdgeInsets.only(bottom: 3),
+                      child:
+                          _isLoading
+                              ? CircularProgressIndicator(color: themeColor)
+                              : XPFitButton(
+                                text: 'Continue',
+                                onPressed:
+                                    () => _handleAvatarSelection(emailRetrieve),
+                              ),
                     ),
                   ],
                 ),
@@ -174,5 +154,40 @@ class AvatarChoosingPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleAvatarSelection(String email) async {
+    if (selectedAvatar == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Please select an avatar.")));
+      return;
+    }
+
+    try {
+      setState(() => _isLoading = true);
+
+      // 1. Save avatar to database
+      await DBHelper.addAvatar(email, selectedAvatar!);
+
+      // 2. Update auth state (optional - if you want to track avatar in auth state)
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.setAvatar(selectedAvatar!);
+
+      // 3. Navigate to home
+      if (mounted) {
+        Navigator.pushNamed(context, '/home', arguments: email);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error saving avatar: ${e.toString()}")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 }

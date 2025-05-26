@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:xp_fit/AUTH/authservice.page.dart';
 import 'package:xp_fit/UI/widgets/Objective.widget.dart';
 import 'package:xp_fit/UI/widgets//DailyQuest.widget.dart';
 
@@ -17,13 +19,16 @@ class _HomePageState extends State<HomePage> {
   int level = 5; // Current level
 
   // User's name
-  String userName = "Sung Jin Woo"; // Default user name
 
   // Your app's theme color
   final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final userName = authProvider.username ?? "Guest";
+    final userAvatar = authProvider.avatarPath;
+
     return Container(
       // Gradient background container that will be underneath everything
       decoration: BoxDecoration(
@@ -58,21 +63,20 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-      padding: const EdgeInsets.only(
-        top: 20.0, // Add margin from the top
-      ),
-            ),    
-            
+              padding: const EdgeInsets.only(
+                top: 20.0, // Add margin from the top
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 0.0,
               ),
-              
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
                   // Level indicator, XP text, and user name
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                           -15,
                         ), // Move the image slightly upward
                         child: Image.asset(
-                          'assets/avatars/avatar1.png', // Replace with your asset path
+                          userAvatar!, // Replace with your asset path
                           height: 120, // Adjust the size as needed
                           width: 120,
                         ),
@@ -191,12 +195,12 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
                     Navigator.pushNamed(context, '/exercice');
-
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.sports_gymnastics, color: themeColor),
                   onPressed: () {
+                    Navigator.pushNamed(context, '/favorites');
                   },
                 ),
               ],
