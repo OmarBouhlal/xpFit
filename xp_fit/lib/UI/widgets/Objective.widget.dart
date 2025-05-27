@@ -1,33 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:xp_fit/DB/db_helper.dart';
 
 class PersonalQuestsWidget extends StatefulWidget {
-  const PersonalQuestsWidget({super.key});
+  final String? email;
+  const PersonalQuestsWidget({super.key, required this.email});
 
   @override
   State<PersonalQuestsWidget> createState() => _PersonalQuestsWidgetState();
 }
 
 class _PersonalQuestsWidgetState extends State<PersonalQuestsWidget> {
-  double currentWeight = 75.0; // in kg
-  double targetWeight = 68.0; // in kg
+  Future<double>? currentWeight;
+  Future<double>? targetWeight;
 
   final Color backgroundColor = const Color(0xFF121E3C);
   final Color borderColor = Colors.blueAccent;
-  final TextStyle labelStyle = const TextStyle(color: Colors.white, fontSize: 16);
+  final TextStyle labelStyle = const TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+  );
   final TextStyle valueStyle = const TextStyle(
-      color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20);
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+  );
 
-  void _editWeights() {
-    final currentController = TextEditingController(text: currentWeight.toString());
-    final targetController = TextEditingController(text: targetWeight.toString());
+  @override
+  void initState() {
+    super.initState();
+    _loadWeights();
+  }
+
+  void _loadWeights() {
+    if (!mounted) return; // prevent setState after dispose
+    setState(() {
+      currentWeight = DBHelper.getCurrentWeight(widget.email!);
+      targetWeight = DBHelper.getObjtWeight(widget.email!);
+    });
+  }
+
+  void _editWeights() async {
+    double currentValue = await currentWeight ?? 0.0;
+    double targetValue = await targetWeight ?? 0.0;
+
+    final currentController = TextEditingController(
+      text: currentValue.toStringAsFixed(1),
+    );
+    final targetController = TextEditingController(
+      text: targetValue.toStringAsFixed(1),
+    );
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: const Text('Edit Weights', style: TextStyle(color: Colors.white)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const Text(
+            'Edit Weights',
+            style: TextStyle(color: Colors.white),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -59,17 +93,75 @@ class _PersonalQuestsWidgetState extends State<PersonalQuestsWidget> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                setState(() {
-                  currentWeight = double.tryParse(currentController.text) ?? currentWeight;
-                  targetWeight = double.tryParse(targetController.text) ?? targetWeight;
-                });
-                Navigator.of(context).pop();
+              onPressed: () async {
+                double? newCurrent = double.tryParse(
+                  currentController.text.trim(),
+                );
+                double? newTarget = double.tryParse(
+                  targetController.text.trim(),
+                );
+
+                if (newCurrent != null && newTarget != null) {
+                  await DBHelper.modifyCurrentWeight(widget.email!, newCurrent);
+                  await DBHelper.modifyObjeeWeight(widget.email!, newTarget);
+
+                  if (mounted) _loadWeights(); // safe check here
+                }
+
+                if (context.mounted)
+                  Navigator.of(context).pop(); // ensure context is valid
               },
-              child: const Text('SAVE', style: TextStyle(color: Colors.blueAccent)),
+              child: const Text(
+                'SAVE',
+                style: TextStyle(color: Colors.blueAccent),
+              ),
             ),
           ],
         );
+      },
+    );
+  }
+
+  Widget _buildWeightRow(String label, Future<double>? futureWeight) {
+    return FutureBuilder<double>(
+      future: futureWeight,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: labelStyle),
+              const Text("Loading...", style: TextStyle(color: Colors.white70)),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: labelStyle),
+              Text("Error", style: TextStyle(color: Colors.redAccent)),
+            ],
+          );
+        } else if (snapshot.hasData) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: labelStyle),
+              Text(
+                "${snapshot.data!.toStringAsFixed(1)} kg",
+                style: valueStyle,
+              ),
+            ],
+          );
+        } else {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: labelStyle),
+              const Text("No data", style: TextStyle(color: Colors.white70)),
+            ],
+          );
+        }
       },
     );
   }
@@ -113,22 +205,9 @@ class _PersonalQuestsWidgetState extends State<PersonalQuestsWidget> {
           ),
           const SizedBox(height: 16),
 
-          // Main weight quest
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Current Weight:", style: labelStyle),
-              Text("${currentWeight.toStringAsFixed(1)} kg", style: valueStyle),
-            ],
-          ),
+          _buildWeightRow("Current Weight:", currentWeight),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Target Weight:", style: labelStyle),
-              Text("${targetWeight.toStringAsFixed(1)} kg", style: valueStyle),
-            ],
-          ),
+          _buildWeightRow("Target Weight:", targetWeight),
 
           const SizedBox(height: 24),
 

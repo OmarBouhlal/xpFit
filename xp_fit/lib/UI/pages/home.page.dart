@@ -18,8 +18,9 @@ class _HomePageState extends State<HomePage> {
   int level = 5; // Current level
 
   // Your app's theme color
-  final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
-  
+  //final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+  final Color themeColor = const Color.fromARGB(232, 163, 218, 246);
+
   // Define variables at the class level
   int? idUser;
   String? username;
@@ -51,10 +52,6 @@ class _HomePageState extends State<HomePage> {
         hasError = false;
       });
 
-      //clean the database  khalilox@gmail.com
-      //DBHelper.resetDatabase();
-
-
       final user = await DBHelper.retrieve_user(emailArg);
       if (user != null) {
         setState(() {
@@ -66,10 +63,11 @@ class _HomePageState extends State<HomePage> {
           height = (user['height'] as num).toDouble();
           birthDate = user['birthDate'];
           gender = user['gender'];
-          objWeight = user['obj_weight'] != null ? (user['obj_weight'] as num).toDouble() : null;
+          objWeight = user['obj_weight'];
           avatar = user['avatar'];
           isLoading = false;
         });
+        
       } else {
         setState(() {
           hasError = true;
@@ -180,148 +178,143 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildMainContent() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20.0, // Add margin from the top
-          ),
+ Widget _buildMainContent() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(
+          top: 35.0, // Add margin from the top
         ),
-        
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 0.0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Level indicator, XP text, and user name
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      ),
+      
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 0.0,
+        ),
+        child: ClipRect(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Container(
+              height: 150, // Increased height to accommodate content
+              child: Stack( // Changed to Stack for better positioning
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Level $level',
-                        style: TextStyle(
-                          color: themeColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 15), // Space between Level and XP
-                      Text(
-                        '${currentXP.toInt()}/${maxXP.toInt()} XP',
-                        style: TextStyle(
-                          color: themeColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 35.0,
-                    ), // Move userName slightly to the left
-                    child: Text(
-                      username ?? 'User', // Use the loaded username or fallback
-                      style: TextStyle(
-                        color: themeColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              // XP Progress bar and person icon
-              Row(
-                children: [
-                  Expanded(
-                    flex: 8, // Adjust the flex to control the progress bar width
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: currentXP / maxXP,
-                        backgroundColor: Colors.grey.withOpacity(0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          themeColor,
-                        ),
-                        minHeight: 10,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ), // Space between the progress bar and the icon
-                  Transform.translate(
-                    offset: Offset(
-                      0,
-                      -15,
-                    ), // Move the image slightly upward
-                    child: avatar != null
-                        ? Image.asset(
-                            avatar!, // Now safely use avatar since we check for null
-                            height: 120, // Adjust the size as needed
-                            width: 120,
-                            errorBuilder: (context, error, stackTrace) {
-                              // Fallback if the image can't be loaded
-                              return Container(
-                                height: 120,
-                                width: 120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: themeColor.withOpacity(0.3),
-                                ),
-                                child: Icon(
-                                  Icons.person,
-                                  size: 60,
-                                  color: themeColor,
-                                ),
-                              );
-                            },
-                          )
-                        : Container(
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: themeColor.withOpacity(0.3),
-                            ),
-                            child: Icon(
-                              Icons.person,
-                              size: 60,
-                              color: themeColor,
-                            ),
+                  // Left side content
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    right: 120, // Leave space for avatar
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Level indicator - aligned to the left
+                        Text(
+                          'Level $level',
+                          style: TextStyle(
+                            color: themeColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        
+                        // Username - aligned to the left (same vertical line as level)
+                        Text(
+                          username ?? 'User',
+                          style: TextStyle(
+                            color: themeColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28, // Large size for prominence
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        
+                        SizedBox(height: 10),
+                        
+                        // XP progress section
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${((weight! * 100 )/objWeight!).toStringAsFixed(0)}/${maxXP.toInt()}XP',
+                              style: TextStyle(
+                                color: themeColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: LinearProgressIndicator(
+                              value: (weight! < objWeight!)
+                                ? ((weight! * 100) / objWeight!) / maxXP
+                                : (100 - (100 - (objWeight! / weight!) * 100)) / maxXP,
+
+                                backgroundColor: Colors.grey.withOpacity(0.3),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  const Color.fromARGB(232, 163, 218, 246),
+                                ),
+                                minHeight: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Avatar positioned on the right
+                  Positioned(
+                    right: -25,
+                    top: -7,
+                    child: Container(
+                      height: 170,
+                      width: 170,
+                      child: avatar != null
+                          ? Image.asset(
+                              avatar!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return _buildAvatarPlaceholder(themeColor);
+                              },
+                            )
+                          : _buildAvatarPlaceholder(themeColor),
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 20),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: const [
-                PersonalQuestsWidget(),
-                SizedBox(height: 20),
-                DailyQuestSelectorWidget(),
-              ],
             ),
           ),
         ),
+      ),
+      
+      Expanded(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              PersonalQuestsWidget(email : email!),
+              SizedBox(height: 15),
+              DailyQuestSelectorWidget(),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
+}
 
-        // Add spacing for other body content
-      ],
-    );
-  }
-
+Widget _buildAvatarPlaceholder(Color themeColor) {
+  return Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: themeColor.withOpacity(0.3),
+    ),
+    child: Icon(
+      Icons.person,
+      size: 40,
+      color: themeColor,
+    ),
+  );
+}
 }

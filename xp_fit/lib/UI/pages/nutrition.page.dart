@@ -12,7 +12,7 @@ class NutritionPage extends StatefulWidget {
 }
 
 class _NutritionPageState extends State<NutritionPage> {
-  final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+  final Color themeColor =  const Color.fromARGB(232, 163, 218, 246);
   late Future<Map<String, dynamic>> _mealPlanFuture;
   late Future<Duration?> _cacheAgeFuture;
   final Set<int> _favoriteMealIds = {};
