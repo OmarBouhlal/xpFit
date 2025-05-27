@@ -179,6 +179,9 @@ class _HomePageState extends State<HomePage> {
   }
 
  Widget _buildMainContent() {
+   weight = weight ?? 0.0;
+   objWeight = objWeight ?? 1.0; // Default to 1 to avoid division by zero
+   email = email ?? ''; // Safe email for PersonalQuestsWidget
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
