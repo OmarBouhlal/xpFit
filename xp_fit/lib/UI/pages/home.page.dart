@@ -236,7 +236,10 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${((weight! * 100 )/objWeight!).toStringAsFixed(0)}/${maxXP.toInt()}XP',
+                              //'${((weight! * 100 )/objWeight!).toStringAsFixed(0)}/${maxXP.toInt()}XP',
+                              '${((weight! < objWeight!)
+                                ? ((weight! * 100) / objWeight!)
+                                : (100 - (100 - (objWeight! / weight!) * 100))).toStringAsFixed(0)}/${maxXP.toInt()}XP',
                               style: TextStyle(
                                 color: themeColor,
                                 fontSize: 13,
