@@ -6,6 +6,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NutritionPage extends StatefulWidget {
   const NutritionPage({super.key});
+  void _launchURL(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   State<NutritionPage> createState() => _NutritionPageState();
@@ -17,12 +22,6 @@ class _NutritionPageState extends State<NutritionPage> {
   late Future<Duration?> _cacheAgeFuture;
   final Set<int> _favoriteMealIds = {};
   final Map<String, bool> _isExpandedMap = {};
-  
-  void _launchURL(String url) async {
-    if (!await launchUrl(Uri.parse(url))) {
-      throw 'Could not launch $url';
-    }
-  }
 
   void _showNutritionLabelImage(BuildContext context, int idRecipe) async {
     final nutritionLabelURL = NutritionAPI.getNutritionLabelUrl(idRecipe);
@@ -42,9 +41,15 @@ class _NutritionPageState extends State<NutritionPage> {
     );
   }
 
-  void _toggleFavorite(dynamic meal , String email) {
+  void _toggleFavorite(dynamic meal, String email) {
     if (!_favoriteMealIds.contains(meal['id'])) {
-      DBHelper.addNutrition(email, meal['id'], meal['title'], meal['sourceUrl'], meal['image']);
+      DBHelper.addNutrition(
+        email,
+        meal['id'],
+        meal['title'],
+        meal['sourceUrl'],
+        meal['image'],
+      );
     }
     setState(() {
       if (_favoriteMealIds.contains(meal['id'])) {
@@ -277,7 +282,7 @@ class _NutritionPageState extends State<NutritionPage> {
                                               Flexible(
                                                 child: IconButton(
                                                   onPressed:
-                                                      () => _launchURL(
+                                                      () => widget._launchURL(
                                                         'https://spoonacular.com/recipes/${meal['image'].split('.')[0]}',
                                                       ),
                                                   icon: Icon(
@@ -289,11 +294,78 @@ class _NutritionPageState extends State<NutritionPage> {
                                               Flexible(
                                                 child: IconButton(
                                                   onPressed:
-                                                      () => _toggleFavorite(meal, emailRetrieve),
+                                                      () => {
+                                                        _toggleFavorite(
+                                                          meal,
+                                                          emailRetrieve,
+                                                        ),
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            duration: Duration(
+                                                              seconds: 1,
+                                                            ),
+                                                            content: RichText(
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '${meal['title']}',
+                                                                    style:
+                                                                        GoogleFonts.salsa(),
+                                                                  ),
+                                                                  WidgetSpan(
+                                                                    child:
+                                                                        SizedBox(
+                                                                          width:
+                                                                              6,
+                                                                        ),
+                                                                  ),
+                                                                  TextSpan(
+                                                                    text:
+                                                                        'added to Favorites',
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            shape:
+                                                                OutlineInputBorder(),
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                          ),
+
+                                                          snackBarAnimationStyle:
+                                                              AnimationStyle(
+                                                                duration: Duration(
+                                                                  milliseconds:
+                                                                      300,
+                                                                ),
+                                                                reverseDuration:
+                                                                    Duration(
+                                                                      milliseconds:
+                                                                          100,
+                                                                    ),
+                                                              ),
+                                                        ),
+                                                      },
                                                   icon: Icon(
                                                     Icons.favorite,
                                                     color:
-                                                        _favoriteMealIds.contains(meal['id'],)? Color.fromARGB(255,82,229,255,): null,
+                                                        _favoriteMealIds
+                                                                .contains(
+                                                                  meal['id'],
+                                                                )
+                                                            ? Color.fromARGB(
+                                                              255,
+                                                              82,
+                                                              229,
+                                                              255,
+                                                            )
+                                                            : null,
                                                   ),
                                                 ),
                                               ),
@@ -323,25 +395,41 @@ class _NutritionPageState extends State<NutritionPage> {
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home',arguments: emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/home',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/nutrition',arguments:emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/nutrition',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/exercice',arguments: emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/exercice',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.favorite, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/favourite',arguments: emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/favourite',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
               ],

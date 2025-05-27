@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:xp_fit/DB/db_helper.dart';
 import '../../API/exercice.api.dart';
-
-
 
 class ExercicePage extends StatefulWidget {
   @override
@@ -12,44 +11,41 @@ class ExercicePage extends StatefulWidget {
 }
 
 class _ExercisePageState extends State<ExercicePage> {
-
   List<Map<String, dynamic>> exercises = [];
   bool isLoading = true;
   String selectedMuscle = 'biceps';
   List<dynamic> targets = [];
 
   Future<void> loadInitialData() async {
-  try {
+    try {
+      final targetList = await ExerciceAPI.fetchTargets();
+      final exerciseList = await ExerciceAPI.fetchExercises(selectedMuscle);
 
-    final targetList = await ExerciceAPI.fetchTargets();
-    final exerciseList = await ExerciceAPI.fetchExercises(selectedMuscle);
-
-    setState(() {
-      targets = targetList;
-      exercises = exerciseList;
-      isLoading = false;
-    });
-  } catch (e) {
-    print('Error: $e');
+      setState(() {
+        targets = targetList;
+        exercises = exerciseList;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
   }
-}
 
+  @override
+  void initState() {
+    super.initState();
+    loadInitialData();
+  }
 
-@override
-void initState() {
-  super.initState();
-  loadInitialData();
-}
   @override
   Widget build(BuildContext context) {
-
     //user email that enable us to identify the user to send it back as argument to the home or loved page
     final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
 
     final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
 
     return Padding(
-      padding: const EdgeInsets.only(top:10.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Scaffold(
         body: Column(
           children: [
@@ -57,10 +53,7 @@ void initState() {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF0A1D37),
-                    Color(0xFF1E3C72),
-                  ],
+                  colors: [Color(0xFF0A1D37), Color(0xFF1E3C72)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -86,7 +79,7 @@ void initState() {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width:20),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -109,22 +102,26 @@ void initState() {
                           value: selectedMuscle,
                           isExpanded: true,
                           style: const TextStyle(color: Colors.white),
-                          items: targets.map((muscle) {
-                            return DropdownMenuItem<String>(
-                              value: muscle,
-                              child: Text(
-                                muscle.toUpperCase(),
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            );
-                          }).toList(),
+                          items:
+                              targets.map((muscle) {
+                                return DropdownMenuItem<String>(
+                                  value: muscle,
+                                  child: Text(
+                                    muscle.toUpperCase(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
                           onChanged: (newValue) async {
                             setState(() {
                               selectedMuscle = newValue!;
                               isLoading = true;
                             });
 
-                            final newExercises = await ExerciceAPI.fetchExercises(selectedMuscle);
+                            final newExercises =
+                                await ExerciceAPI.fetchExercises(
+                                  selectedMuscle,
+                                );
 
                             setState(() {
                               exercises = newExercises;
@@ -139,28 +136,35 @@ void initState() {
               ),
             ),
             Expanded(
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : GridView.builder(
-                      padding: const EdgeInsets.all(12),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+              child:
+                  isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : GridView.builder(
+                        padding: const EdgeInsets.all(12),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 1,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                        itemCount: exercises.length,
+                        itemBuilder: (context, index) {
+                          final exercise = exercises[index];
+                          return ExerciseCard(
+                            exercise: exercise,
+                            email: emailRetrieve,
+                          );
+                        },
                       ),
-                      itemCount: exercises.length,
-                      itemBuilder: (context, index) {
-                        final exercise = exercises[index];
-                        return ExerciseCard(exercise: exercise, email :emailRetrieve);
-                      },
-                    ),
             ),
           ],
         ),
         bottomNavigationBar: Theme(
           // Override the bottom nav theme to ensure transparency
-          data: Theme.of(context).copyWith(canvasColor: const Color.fromARGB(0, 0, 0, 0)),
+          data: Theme.of(
+            context,
+          ).copyWith(canvasColor: const Color.fromARGB(0, 0, 0, 0)),
           child: BottomAppBar(
             color: Colors.transparent,
             elevation: 0,
@@ -170,25 +174,41 @@ void initState() {
                 IconButton(
                   icon: Icon(Icons.home, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home',arguments: emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/home',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.restaurant, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/nutrition',arguments:emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/nutrition',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.fitness_center_sharp, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/exercice',arguments: emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/exercice',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.favorite, color: themeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/favourite',arguments: emailRetrieve);
+                    Navigator.pushNamed(
+                      context,
+                      '/favourite',
+                      arguments: emailRetrieve,
+                    );
                   },
                 ),
               ],
@@ -200,13 +220,11 @@ void initState() {
   }
 }
 
-
-
 class ExerciseCard extends StatefulWidget {
   final dynamic exercise;
   final String email;
 
-  const ExerciseCard({super.key, required this.exercise , required this.email});
+  const ExerciseCard({super.key, required this.exercise, required this.email});
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -216,7 +234,13 @@ class _ExerciseCardState extends State<ExerciseCard> {
   bool isFavorite = false;
 
   void toggleFavorite() {
-    DBHelper.addExercice(widget.email , widget.exercise["id"].toString() , widget.exercise["name"].toString(), widget.exercise["gifUrl"].toString(), widget.exercise["instructions"]);
+    DBHelper.addExercice(
+      widget.email,
+      widget.exercise["id"].toString(),
+      widget.exercise["name"].toString(),
+      widget.exercise["gifUrl"].toString(),
+      widget.exercise["instructions"],
+    );
     setState(() {
       isFavorite = !isFavorite;
       //print("itouuuuuub");
@@ -232,7 +256,9 @@ class _ExerciseCardState extends State<ExerciseCard> {
           builder: (context) {
             return AlertDialog(
               backgroundColor: const Color(0xFF121E3C),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               title: Text(
                 widget.exercise['name'].toString().toUpperCase(),
                 style: const TextStyle(color: Colors.white),
@@ -246,7 +272,10 @@ class _ExerciseCardState extends State<ExerciseCard> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('DONE', style: TextStyle(color: Colors.blueAccent)),
+                  child: const Text(
+                    'DONE',
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
                 ),
               ],
             );
@@ -261,10 +290,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: const LinearGradient(
-              colors: [
-                Color(0xFF0A1D37),
-                Color(0xFF1E3C72),
-              ],
+              colors: [Color(0xFF0A1D37), Color(0xFF1E3C72)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -310,12 +336,42 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 top: 8,
                 right: 8,
                 child: GestureDetector(
-                  onTap: toggleFavorite,
+                  onTap:
+                      () => {
+                        toggleFavorite(),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '${widget.exercise['name']}',
+                                    style: GoogleFonts.salsa(),
+                                  ),
+                                  WidgetSpan(child: SizedBox(width: 6)),
+                                  TextSpan(text: 'added to Favorites'),
+                                ],
+                              ),
+                            ),
+                            shape: OutlineInputBorder(),
+                            backgroundColor: Colors.green,
+                          ),
+
+                          snackBarAnimationStyle: AnimationStyle(
+                            duration: Duration(milliseconds: 300),
+                            reverseDuration: Duration(milliseconds: 100),
+                          ),
+                        ),
+                      },
                   child: CircleAvatar(
                     backgroundColor: Colors.black54,
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? const Color.fromARGB(255, 82, 160, 255) : Colors.white,
+                      color:
+                          isFavorite
+                              ? const Color.fromARGB(255, 82, 160, 255)
+                              : Colors.white,
                     ),
                   ),
                 ),

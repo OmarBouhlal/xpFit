@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FavoriteExercice extends StatefulWidget {
   final dynamic filteredElement;
-  const FavoriteExercice({super.key,this.filteredElement});
+  const FavoriteExercice({super.key, this.filteredElement});
 
   @override
   State<FavoriteExercice> createState() => _FavoriteExerciceState();
@@ -11,7 +12,6 @@ class FavoriteExercice extends StatefulWidget {
 class _FavoriteExerciceState extends State<FavoriteExercice> {
   bool isFavorite = false;
 
-  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,12 +25,46 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
                 borderRadius: BorderRadius.circular(20),
               ),
               title: Text(
-                widget.filteredElement['name_exercice'].toString().toUpperCase(),
+                widget.filteredElement['name_exercice']
+                    .toString()
+                    .toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
-              content: Text(
-                'Instructions:\n${widget.filteredElement['instructions'] ?? 'No instructions available.'}',
-                style: const TextStyle(color: Colors.white70),
+              content: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      widget.filteredElement['gifUrl'],
+                      width: 250,
+                      height: 250,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Instructions : ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        WidgetSpan(
+                          child: SizedBox(height: 18, width: double.infinity),
+                        ),
+                        TextSpan(
+                          text:
+                              '${widget.filteredElement['instructions'] ?? 'No instructions available.'}',
+                          style: GoogleFonts.montserrat(fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               actions: [
                 TextButton(
@@ -38,7 +72,7 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
                     Navigator.of(context).pop();
                   },
                   child: const Text(
-                    'DONE',
+                    'Close',
                     style: TextStyle(color: Colors.blueAccent),
                   ),
                 ),
@@ -76,7 +110,9 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      widget.filteredElement['name_exercice'].toString().toUpperCase(),
+                      widget.filteredElement['name_exercice']
+                          .toString()
+                          .toUpperCase(),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -85,12 +121,11 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    
                   ],
                 ),
               ),
+
               //heart
-              
             ],
           ),
         ),

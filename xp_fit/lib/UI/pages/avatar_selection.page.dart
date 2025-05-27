@@ -137,7 +137,7 @@ class _AvatarChoosingPageState extends State<AvatarChoosingPage> {
                             // You can navigate or show confirmation here
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Please select an avatar.")),
+                              SnackBar(content: Text("Please select an avatar."),),
                             );
                           }
                         },

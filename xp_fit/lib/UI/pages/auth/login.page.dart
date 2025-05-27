@@ -62,42 +62,51 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 8,
-                  ),
+                  SizedBox(height: 8),
                   // Login button
                   XPFitButton(
                     text: 'Login',
                     onPressed: () async {
-                        // Handle Login logic here
-                        final email = _emailController.text.trim();
-                        final password = _passwordController.text;
+                      // Handle Login logic here
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text;
 
-                        if (email.isEmpty ||
-                            password.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Please fill all fields correctly.")),
-                          );
-                          return;
-                        }
-                        bool isUser = await DBHelper.checkLogin(
-                          email,
-                          password,
+                      if (email.isEmpty || password.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please fill all fields correctly."),
+                          ),
                         );
+                        return;
+                      }
+                      bool isUser = await DBHelper.checkLogin(email, password);
 
-                        if(isUser){
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Login successfuly!")),
-                          );
-                          Navigator.pushReplacementNamed(context, '/home', arguments: email);
-                        }
-                        else{
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Invalid Inforamtions!")),
-                          );
-                        }
-                      },
-                      
+                      if (isUser) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Login successfuly!",
+                              style: TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.green,
+                            shape: BeveledRectangleBorder(),
+                          ),
+                        );
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/home',
+                          arguments: email,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Invalid Inforamtions!"),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
