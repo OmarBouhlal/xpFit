@@ -23,7 +23,7 @@ class _AvatarChoosingPageState extends State<AvatarChoosingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+    final Color themeColor =  const Color.fromARGB(232, 163, 218, 246);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;

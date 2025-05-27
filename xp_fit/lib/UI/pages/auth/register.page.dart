@@ -114,7 +114,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         ? CircularProgressIndicator(color: Colors.cyanAccent)
                         : XPFitButton(
                             text: 'Register',
-                            onPressed: _handleRegistration,
+                            onPressed:()=> { 
+                              _handleRegistration(),
+
+                              DBHelper.getObjtWeight(_emailController.text.trim()),
+                              
+                            },
                           ),
                   ),
                 ],

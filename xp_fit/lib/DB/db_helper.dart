@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -163,7 +164,7 @@ class DBHelper {
     static Future<List<Map<String, dynamic>>> getFavorites(
     String selectedFilter,
     String? email,
-  ) async {
+    ) async {
     final db = await database;
     try {
       final user = await db.query(
@@ -184,6 +185,76 @@ class DBHelper {
       rethrow; // Re-throw the error to handle it in the calling code
     }
   }
+
+
+  //modify the Current weight
+  static Future<void> modifyCurrentWeight(String email, double weight) async {
+    final db = await database;
+
+    try{
+      final result = await db.update('users', {'weight': weight}, where: 'email = ?' ,  whereArgs: [email]);
+    }
+    catch(e){
+      print('Error fetching favorites: $e');
+    }
+  }
+
+    //modify the Objective weight
+  static Future<void> modifyObjeeWeight(String email, double obj_weight) async {
+    final db = await database;
+
+    try{
+      final result = await db.update('users', {'obj_weight': obj_weight}, where: 'email = ?' ,  whereArgs: [email]);
+    }
+    catch(e){
+      print('Error fetching favorites: $e');
+    }
+  }
+
+
+  //get the current weight from db 
+  static Future<double> getCurrentWeight(
+    String? email) async {
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      final currentWeight = user.first['weight'] as double;
+      return currentWeight;
+    } catch (e) {
+      print('Error fetching current weight: $e');
+      rethrow; // Re-throw the error to handle it in the calling code
+    }
+  }
+
+    //get the current weight from db 
+  static Future<double> getObjtWeight(
+    String? email) async {
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      if(user.first['obj_weight']!=null){
+        return user.first['obj_weight'] as double;
+      }
+      else{
+         return 5.0;
+      }
+    } catch (e) {
+      print('Error fetching current weight: $e');
+      rethrow; // Re-throw the error to handle it in the calling code
+    }
+  }
+
+
 
   static Future<void> addExercice(
   String email,
@@ -252,6 +323,9 @@ class DBHelper {
   }
   
 
+
+
+
   //nutrition stuff
 
   static Future<void> addNutrition(
@@ -303,6 +377,8 @@ class DBHelper {
       print('Error adding nutrition: $e');
       rethrow;
     }
-}
+  }
+
+
 
 }

@@ -42,7 +42,7 @@ class _ExercisePageState extends State<ExercicePage> {
     //user email that enable us to identify the user to send it back as argument to the home or loved page
     final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
 
-    final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+    final Color themeColor =  const Color.fromARGB(232, 163, 218, 246);
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
