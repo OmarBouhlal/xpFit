@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xp_fit/UI/pages/auth/login.page.dart';
 
 import 'package:xp_fit/UI/pages/auth/register.page.dart';
+import 'package:xp_fit/UI/pages/chatbot.page.dart';
 import 'package:xp_fit/UI/pages/exercice.page.dart';
 import 'package:xp_fit/UI/pages/favorites.page.dart';
 import 'package:xp_fit/UI/pages/home.page.dart';
@@ -23,14 +24,15 @@ class MyApp extends StatelessWidget {
         "/home": (context) => HomePage(),
         "/exercice": (context) => ExercicePage(),
         "/chooseAvatar": (context) => AvatarChoosingPage(),
-        "/favourite": (context) => FavoritesPage()
+        "/favourite": (context) => FavoritesPage(),
+        "/chatbot" : (context) => ChatbotPage()
       },
       theme: ThemeData(
         brightness: Brightness.dark,
         appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      initialRoute: "/",
+      initialRoute: "/chatbot",
     );
     
 

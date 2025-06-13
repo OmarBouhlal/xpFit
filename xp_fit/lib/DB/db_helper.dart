@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:bcrypt/bcrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:sqflite/sqflite.dart';
@@ -25,7 +26,7 @@ class DBHelper {
           CREATE TABLE users (
             id_user INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
-            email TEXT NOT NULL,
+            email TEXT NOT NULL,`
             password TEXT NOT NULL,
             weight REAL NOT NULL,
             height REAL NOT NULL,
@@ -107,36 +108,45 @@ class DBHelper {
     );
   }
 
-  static Future<void> registration(
-    String username,
-    String email,
-    String password,
-    double weight,
-    double height,
-    String birthDate,
-    String gender,
-  ) async {
-    final db = await database;
-    await db.insert('users', {
-      'username': username,
-      'email': email,
-      'password': password,
-      'weight': weight,
-      'height': height,
-      'birthDate': birthDate,
-      'gender': gender,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
-  }
+ static Future<void> registration(
+  String username,
+  String email,
+  String password,
+  double weight,
+  double height,
+  String birthDate,
+  String gender,
+) async {
+  final db = await database;
+  final hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-  static Future<bool> checkLogin(String email, String password) async {
-    final db = await database;
-    final result = await db.query(
-      'users',
-      where: 'email = ? AND password = ?',
-      whereArgs: [email, password],
-    );
-    return result.isNotEmpty;
-  }  
+  await db.insert('users', {
+    'username': username,
+    'email': email,
+    'password': hashedPassword,
+    'weight': weight,
+    'height': height,
+    'birthDate': birthDate,
+    'gender': gender,
+  }, conflictAlgorithm: ConflictAlgorithm.replace);
+}
+
+static Future<bool> checkLogin(String email, String password) async {
+  final db = await database;
+
+  final result = await db.query(
+    'users',
+    where: 'email = ?',
+    whereArgs: [email],
+  );
+
+  if (result.isEmpty) return false;
+
+  final storedHashedPassword = result.first['password'] as String;
+
+  return BCrypt.checkpw(password, storedHashedPassword);
+}
+
   
   static Future<void> add_avatar(String email, String avatar) async {    
     final db = await database;
