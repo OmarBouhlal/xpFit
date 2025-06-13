@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NutritionAPI {
-  static const String _baseUrl = 'https://api.spoonacular.com';
-  static const String _apiKey = 'fe09bfe53b5b428ea00e0a87bd3b8207';
+  static  final String _baseUrl = dotenv.env['NUTRITION_API_HOST'] as String;
+  static  final String _apiKey = dotenv.env['NUTRITION_API_KEY'] as String;
   static const String _cacheKey = 'weekly_meal_plan_cache';
   static const Duration _cacheDuration = Duration(days: 7);
 
