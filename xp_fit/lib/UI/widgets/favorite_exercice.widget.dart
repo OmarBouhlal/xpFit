@@ -59,7 +59,7 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
                         TextSpan(
                           text:
                               '${widget.filteredElement['instructions'] ?? 'No instructions available.'}',
-                          style: GoogleFonts.montserrat(fontSize: 7),
+                          style: GoogleFonts.montserrat(fontSize: 10),
                         ),
                       ],
                     ),
