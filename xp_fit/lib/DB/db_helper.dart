@@ -26,7 +26,7 @@ class DBHelper {
           CREATE TABLE users (
             id_user INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
-            email TEXT NOT NULL,`
+            email TEXT NOT NULL,
             password TEXT NOT NULL,
             weight REAL NOT NULL,
             height REAL NOT NULL,
@@ -390,5 +390,87 @@ static Future<bool> checkLogin(String email, String password) async {
   }
 
 
+  static Future<void> removeNutrition(
+  String email,
+  int id_nutrition
+  ) async {
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      
+      if (user.isEmpty) {
+        print('Error: User not found with email: $email');
+        throw Exception('User not found');
+      }
+      
+      final userId = user.first['id_user'] as int;
+      print("Removing nutrition for user ID: $userId");
+      
+      // Check if exercise already exists for this user
+      final existing = await db.query(
+        'user_nut',
+        where: 'id_nutrition = ? AND id_user = ?',
+        whereArgs: [id_nutrition, userId],
+      );
+      
+      if (existing.isEmpty) {
+        print('Nutrition doesnt exists in favorites');
+        return;
+      }
+      
+      await db.delete('user_nut', 
+        where: 'id_nutrition = ? AND id_user = ?',
+        whereArgs: [id_nutrition, userId]
+      );
+      
+      print("Nutrition deleted successfully");
+    } catch (e) {
+      print('Error deleting nutrition: $e');
+      rethrow;
+    }
+  }
 
+  static Future<bool> isFavorite(
+    String email,
+    int id_nutrition
+    ) async {
+    final db = await database;
+    try {
+      final user = await db.query(
+        'users',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+      
+      if (user.isEmpty) {
+        print('Error: User not found with email: $email');
+        throw Exception('User not found');
+      }
+      
+      final userId = user.first['id_user'] as int;
+      print("Adding nutrition for user ID: $userId");
+      
+      // Check if exercise already exists for this user
+      final existing = await db.query(
+        'user_nut',
+        where: 'id_nutrition = ? AND id_user = ?',
+        whereArgs: [id_nutrition, userId],
+      );
+      bool isFavorite = existing.isNotEmpty; 
+
+      return isFavorite;
+    
+      
+    } catch (e) {
+      print('Error adding nutrition: $e');
+      rethrow;
+    }
+      
+  }
 }

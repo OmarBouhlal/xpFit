@@ -10,6 +10,8 @@ import 'package:xp_fit/UI/pages/home.page.dart';
 import 'package:xp_fit/UI/pages/nutrition.page.dart';
 import 'package:xp_fit/UI/pages/avatar_selection.page.dart'; // Ensure this is the correct path
 
+
+
 Future<void> main() async {
   await dotenv.load(); // Load .env before running the app
   runApp(MyApp());
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.transparent,
       ),
       initialRoute: "/",
+      
     );
     
 

@@ -243,7 +243,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
     );
     setState(() {
       isFavorite = !isFavorite;
-      //print("itouuuuuub");
+      //print("itouuuuuub"); m3a 5 dsbah f mata hh
     });
   }
 

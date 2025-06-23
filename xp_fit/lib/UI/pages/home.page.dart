@@ -17,8 +17,7 @@ class _HomePageState extends State<HomePage> {
   double maxXP = 100; // XP needed for next level
   int level = 5; // Current level
 
-  // Your app's theme color
-  //final Color themeColor = const Color.fromRGBO(80, 140, 155, 1);
+  
   final Color themeColor = const Color.fromARGB(232, 163, 218, 246);
 
   // Define variables at the class level
@@ -40,7 +39,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Load user data when the page dependencies change
+    
+    //used to get the pessed email that identifies the current user
     final emailRetrieve = ModalRoute.of(context)!.settings.arguments as String;
     loadUser(emailRetrieve);
   }

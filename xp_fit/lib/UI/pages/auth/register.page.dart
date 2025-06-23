@@ -192,7 +192,6 @@ class _RegisterPageState extends State<RegisterPage> {
       }
 
       // Attempt registration
-      print('Calling DBHelper.registration...'); // Debug print
       await DBHelper.registration(
         username,
         email,
@@ -203,8 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
         gender,
       );
 
-      print('Registration successful, navigating...'); // Debug print
-      
+      print('Registration successful, navigating...'); 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

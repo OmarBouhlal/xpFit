@@ -51,6 +51,9 @@ class _NutritionPageState extends State<NutritionPage> {
         meal['image'],
       );
     }
+    else {
+      DBHelper.removeNutrition(email, meal['id']);
+    }
     setState(() {
       if (_favoriteMealIds.contains(meal['id'])) {
         _favoriteMealIds.remove(meal['id']);

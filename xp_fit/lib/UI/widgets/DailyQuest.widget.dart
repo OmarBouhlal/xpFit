@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:xp_fit/main.dart';
 
 class DailyQuestSelectorWidget extends StatefulWidget {
   const DailyQuestSelectorWidget({super.key});
@@ -38,9 +41,20 @@ class _DailyQuestSelectorWidgetState extends State<DailyQuestSelectorWidget> {
         .where((exercise) => !displayedExercises.contains(exercise))
         .toList();
 
+    // Check if there are any remaining exercises
+    if (remainingExercises.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('All exercises are already displayed!'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: const Color(0xFF121E3C),
           title: const Text(
@@ -49,31 +63,72 @@ class _DailyQuestSelectorWidgetState extends State<DailyQuestSelectorWidget> {
           ),
           content: SizedBox(
             width: double.maxFinite,
+            height: 300,
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: remainingExercises.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 final exercise = remainingExercises[index];
-                return ListTile(
-                  title: Text(
-                    exercise,
-                    style: const TextStyle(color: Colors.white),
+                return Card(
+                  color: const Color(0xFF1E2A4A),
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.fitness_center,
+                      color: Colors.blueAccent,
+                    ),
+                    title: Text(
+                      exercise,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    trailing: const Icon(
+                      Icons.add,
+                      color: Colors.greenAccent,
+                    ),
+                    onTap: () {
+                      print('Tapped on: $exercise'); // Debug print
+                      print('Before adding - displayedExercises: $displayedExercises'); // Debug print
+                      
+                      Navigator.of(dialogContext).pop();
+                      
+                      // Use a post-frame callback to ensure the dialog is closed first
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) {
+                          setState(() {
+                            displayedExercises.add(exercise);
+                            print('After adding - displayedExercises: $displayedExercises'); // Debug print
+                          });
+                          
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('$exercise added to your exercises!'),
+                              backgroundColor: Colors.green,
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      });
+                    },
                   ),
-                  onTap: () {
-                    setState(() {
-                      displayedExercises.add(exercise);
-                    });
-                    Navigator.of(context).pop();
-                  },
                 );
               },
             ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white70),
+              ),
+            ),
+          ],
         );
       },
     );
   }
 
+
+  //current daily quests check handling
   Widget _buildQuestTile(String title) {
     final bool isSelected = selectedQuests.contains(title);
 
@@ -102,9 +157,25 @@ class _DailyQuestSelectorWidgetState extends State<DailyQuestSelectorWidget> {
               title,
               style: const TextStyle(color: Colors.white),
             ),
-            Icon(
-              isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: isSelected ? Colors.greenAccent : Colors.white54,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Add remove button for displayed exercises (except the initial 4)
+                if (!['Pushups', 'Squats', 'Running', 'Plank'].contains(title))
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent),
+                    onPressed: () {
+                      setState(() {
+                        displayedExercises.remove(title);
+                        selectedQuests.remove(title); // Also remove from selected if it was selected
+                      });
+                    },
+                  ),
+                Icon(
+                  isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
+                  color: isSelected ? Colors.greenAccent : Colors.white54,
+                ),
+              ],
             ),
           ],
         ),
@@ -151,14 +222,29 @@ class _DailyQuestSelectorWidgetState extends State<DailyQuestSelectorWidget> {
           const SizedBox(height: 12),
 
           // Displayed exercises
-          const Text("Common Exercises:", style: TextStyle(color: Colors.white70)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Available Exercises:", style: TextStyle(color: Colors.white70)),
+              Text(
+                "${displayedExercises.length}/${allExercises.length}",
+                style: const TextStyle(color: Colors.white60, fontSize: 12),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
           ...displayedExercises.map(_buildQuestTile),
 
           const SizedBox(height: 16),
           Center(
             child: Text(
-              "Tap the '+' icon to add more exercises.",
-              style: const TextStyle(color: Colors.white60, fontSize: 12),
+              selectedQuests.isEmpty 
+                ? "Select exercises for your daily quest. Tap '+' to add more."
+                : "Selected: ${selectedQuests.length} exercise${selectedQuests.length == 1 ? '' : 's'}",
+              style: TextStyle(
+                color: selectedQuests.isEmpty ? Colors.white60 : Colors.greenAccent,
+                fontSize: 12,
+              ),
               textAlign: TextAlign.center,
             ),
           ),

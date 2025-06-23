@@ -29,15 +29,11 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
       _model = GenerativeModel(
         model: 'gemini-1.5-pro',
-        apiKey: "AIzaSyDUX0rodyjVb1LTbSvoZMP-J84fvUvzYF0", // Use the non-nullable version after checking
+        apiKey: "AIzaSyDUX0rodyjVb1LTbSvoZMP-J84fvUvzYF0", 
       );
-      _chatSession = _model.startChat(); // Start a new chat session
+      _chatSession = _model.startChat(); 
     
   }
-
-  // ... rest of your ChatbotPage code (sendMessage, build, etc.)
-  // Make sure to adapt the sendMessage function to use _chatSession.sendMessage
-  // and include loading indicators and scroll to bottom as discussed previously.
 
   Future<void> sendMessage() async {
     final messageText = _userMessage.text.trim();

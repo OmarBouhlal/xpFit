@@ -75,6 +75,8 @@ class _LoginPageState extends State<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Please fill all fields correctly."),
+                            backgroundColor: Colors.red,
+                            
                           ),
                         );
                         return;
@@ -102,7 +104,9 @@ class _LoginPageState extends State<LoginPage> {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text("Invalid Inforamtions!"),
+                            content: Text("Invalid Credentials!", style: TextStyle(color: Colors.white) ,textAlign: TextAlign.center,),
+                            backgroundColor: Colors.red,
+                            
                           ),
                         );
                       }

@@ -60,6 +60,7 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
                           text:
                               '${widget.filteredElement['instructions'] ?? 'No instructions available.'}',
                           style: GoogleFonts.montserrat(fontSize: 13),
+                          
                         ),
                       ],
                     ),
@@ -101,7 +102,8 @@ class _FavoriteExerciceState extends State<FavoriteExercice> {
               ),
             ],
           ),
-          child: Stack(
+
+          child: Stack(        // this stack position the non aligned items in the left corner , which is not good for this case . we need to replace it
             children: [
               Padding(
                 padding: const EdgeInsets.all(12),

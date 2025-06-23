@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="xp_fit"
+        android:label="XP-FIT"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

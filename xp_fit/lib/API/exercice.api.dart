@@ -26,7 +26,6 @@ class ExerciceAPI {
     }else {
       throw Exception('Failed to load targets');
     }
-
   }
   
   static Future<List<Map<String, dynamic>>> fetchExercises(String selectedMuscle) async {
