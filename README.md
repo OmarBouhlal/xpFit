@@ -2,7 +2,8 @@
 
 A gamified mobile fitness and nutrition tracking application that transforms health monitoring into a fun and engaging experience.
 
-![XP-FIT Logo](assets/logoXPf_fit.jpg)
+![WhatsApp Image 2025-04-24 à 17 56 55_a34ba628](https://github.com/user-attachments/assets/780e64df-1952-40af-81c2-9deba0431e10)
+
 
 ## 📱 Project Overview
 
