@@ -208,18 +208,10 @@ We welcome contributions to XP-FIT! Please follow these steps:
 - Add appropriate comments and documentation
 - Test thoroughly before submitting
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👥 Team
 
-- **Khalil Omar Badr** - Lead Developer
-- **XP-FIT Development Team**
-
-## 📞 Support
-
-For support, email support@xp-fit.com or create an issue in this repository.
+- **Khalil Omar Badr** - Development Team
 
 ## 🔮 Roadmap
 
