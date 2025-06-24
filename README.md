@@ -226,7 +226,6 @@ We welcome contributions to XP-FIT! Please follow these steps:
 ### Version History
 - **v1.0.0** - Initial release with core features
 - **v1.1.0** - Enhanced UI and performance improvements
-- **v1.2.0** - AI chatbot integration
 
 ---
 
